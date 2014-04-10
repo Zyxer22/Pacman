@@ -33,7 +33,7 @@ public class SpriteManager {
 	}
 	
 	public Image[] getYellowGhostSprites(){
-		Image[] sprites = new Image[12];
+		Image[] sprites = new Image[16];
 		sprites[0] = spriteSheet.getSprite(0, 7);
 		sprites[1] = spriteSheet.getSprite(1, 7);
 		sprites[2] = spriteSheet.getSprite(2, 7);
@@ -46,11 +46,15 @@ public class SpriteManager {
 		sprites[9] = spriteSheet.getSprite(1, 8);
 		sprites[10] = spriteSheet.getSprite(2, 8);
 		sprites[11] = spriteSheet.getSprite(3, 8);
+		sprites[12] = spriteSheet.getSprite(0, 10);
+		sprites[13] = spriteSheet.getSprite(1, 10);
+		sprites[14] = spriteSheet.getSprite(2, 10);
+		sprites[15] = spriteSheet.getSprite(3, 10);
 		return sprites;
 	}
 	
 	public Image[] getBlueGhostSprites(){
-		Image[] sprites = new Image[12];
+		Image[] sprites = new Image[16];
 		sprites[0] = spriteSheet.getSprite(0, 6);
 		sprites[1] = spriteSheet.getSprite(1, 6);
 		sprites[2] = spriteSheet.getSprite(2, 6);
@@ -63,11 +67,15 @@ public class SpriteManager {
 		sprites[9] = spriteSheet.getSprite(1, 8);
 		sprites[10] = spriteSheet.getSprite(2, 8);
 		sprites[11] = spriteSheet.getSprite(3, 8);
+		sprites[12] = spriteSheet.getSprite(0, 10);
+		sprites[13] = spriteSheet.getSprite(1, 10);
+		sprites[14] = spriteSheet.getSprite(2, 10);
+		sprites[15] = spriteSheet.getSprite(3, 10);
 		return sprites;
 	}
 	
 	public Image[] getPinkGhostSprites(){
-		Image[] sprites = new Image[12];
+		Image[] sprites = new Image[16];
 		sprites[0] = spriteSheet.getSprite(0, 5);
 		sprites[1] = spriteSheet.getSprite(1, 5);
 		sprites[2] = spriteSheet.getSprite(2, 5);
@@ -80,11 +88,15 @@ public class SpriteManager {
 		sprites[9] = spriteSheet.getSprite(1, 8);
 		sprites[10] = spriteSheet.getSprite(2, 8);
 		sprites[11] = spriteSheet.getSprite(3, 8);
+		sprites[12] = spriteSheet.getSprite(0, 10);
+		sprites[13] = spriteSheet.getSprite(1, 10);
+		sprites[14] = spriteSheet.getSprite(2, 10);
+		sprites[15] = spriteSheet.getSprite(3, 10);
 		return sprites;
 	}
 	
 	public Image[] getRedGhostSprites(){
-		Image[] sprites = new Image[12];
+		Image[] sprites = new Image[16];
 		sprites[0] = spriteSheet.getSprite(0, 4);
 		sprites[1] = spriteSheet.getSprite(1, 4);
 		sprites[2] = spriteSheet.getSprite(2, 4);
@@ -97,6 +109,10 @@ public class SpriteManager {
 		sprites[9] = spriteSheet.getSprite(1, 8);
 		sprites[10] = spriteSheet.getSprite(2, 8);
 		sprites[11] = spriteSheet.getSprite(3, 8);
+		sprites[12] = spriteSheet.getSprite(0, 10);
+		sprites[13] = spriteSheet.getSprite(1, 10);
+		sprites[14] = spriteSheet.getSprite(2, 10);
+		sprites[15] = spriteSheet.getSprite(3, 10);
 		return sprites;
 	}
 	

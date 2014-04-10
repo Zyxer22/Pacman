@@ -11,7 +11,11 @@ public class Ghost implements Entity{
 	private Animation downAnimation;
 	private Animation currentAnimation;
 	private Animation orbAnimation;
-	private Animation eatenAnimation;
+	private Animation upEatenAnimation;
+	private Animation downEatenAnimation;
+	private Animation leftEatenAnimation;
+	private Animation rightEatenAnimation;
+	private Animation flashingAnimation;
 	private int currentFrame;
 	private String direction;
 	private String type;
@@ -44,16 +48,34 @@ public class Ghost implements Entity{
 		orbSprites[0] = sprites[8];
 		orbSprites[1]= sprites[9];
 		
-		Image[] eatenSprites = new Image[2];
-		eatenSprites[0] = sprites[10];
-		eatenSprites[1] = sprites[11];
+		Image[] flashingSprites = new Image[4];
+		flashingSprites[0] = sprites[10];
+		flashingSprites[1] = sprites[11];
+		flashingSprites[2] = sprites[8];
+		flashingSprites[3] = sprites[9];
+		
+		Image[] leftEatenSprites = new Image[1];
+		leftEatenSprites[0] = sprites[14];
+		
+		Image[] upEatenSprites = new Image[1];
+		upEatenSprites[0] = sprites[12];
+		
+		Image[] rightEatenSprites = new Image[1];
+		rightEatenSprites[0] = sprites[15];
+		
+		Image[] downEatenSprites = new Image[1];
+		downEatenSprites[0] = sprites[13];
 		
 		leftAnimation = new Animation(leftSprites, SpriteManager.animationFrames);
 		rightAnimation = new Animation(rightSprites, SpriteManager.animationFrames);
 		upAnimation = new Animation(upSprites, SpriteManager.animationFrames);
 		downAnimation = new Animation(downSprites, SpriteManager.animationFrames);
 		orbAnimation = new Animation(orbSprites, SpriteManager.animationFrames);
-		eatenAnimation = new Animation(eatenSprites, SpriteManager.animationFrames);
+		flashingAnimation = new Animation(flashingSprites, SpriteManager.animationFrames);
+		leftEatenAnimation = new Animation(leftEatenSprites, SpriteManager.animationFrames);
+		upEatenAnimation = new Animation(upEatenSprites, SpriteManager.animationFrames);
+		downEatenAnimation = new Animation(downEatenSprites, SpriteManager.animationFrames);
+		rightEatenAnimation = new Animation(rightEatenSprites, SpriteManager.animationFrames);
 		
 		currentAnimation = leftAnimation;
 		startCurrentAnimation();
@@ -146,46 +168,55 @@ public class Ghost implements Entity{
 		if (direction.equals("left") && (state.equals("chasing") || state.equals("running"))){
 			//frame matching
 			currentAnimation.stop();
-			currentFrame = currentAnimation.getFrame();
 			currentAnimation = leftAnimation;
-			currentAnimation.setCurrentFrame(currentFrame);
 			currentAnimation.start();
 		}
 		else if (direction.equals("right") && (state.equals("chasing") || state.equals("running"))){
 			currentAnimation.stop();
-			currentFrame = currentAnimation.getFrame();
 			currentAnimation = rightAnimation;
-			currentAnimation.setCurrentFrame(currentFrame);
 			currentAnimation.start();
 		}
 		else if (direction.equals("up") && (state.equals("chasing") || state.equals("running"))){
 			currentAnimation.stop();
-			currentFrame = currentAnimation.getFrame();
 			currentAnimation = upAnimation;
-			currentAnimation.setCurrentFrame(currentFrame);
 			currentAnimation.start();
 		}
 		else if (direction.equals("down") && (state.equals("chasing") || state.equals("running"))){
 			currentAnimation.stop();
-			currentFrame = currentAnimation.getFrame();
 			currentAnimation = downAnimation;
-			currentAnimation.setCurrentFrame(currentFrame);
 			currentAnimation.start();
 		}
 		else if (state.equals("orb")){
 			currentAnimation.stop();
-			currentFrame = currentAnimation.getFrame();
 			currentAnimation = orbAnimation;
-			currentAnimation.setCurrentFrame(currentFrame);
 			currentAnimation.start();
 		}
-		else if (state.equals("eaten")){
+		else if (direction.equals("left") && state.equals("eaten")){
 			currentAnimation.stop();
-			currentFrame = currentAnimation.getFrame();
-			currentAnimation = eatenAnimation;
-			currentAnimation.setCurrentFrame(currentFrame);
+			currentAnimation = leftEatenAnimation;
 			currentAnimation.start();
 		}
+		else if (direction.equals("up") && state.equals("eaten")){
+			currentAnimation.stop();
+			currentAnimation = upEatenAnimation;
+			currentAnimation.start();
+		}
+		else if (direction.equals("right") && state.equals("eaten")){
+			currentAnimation.stop();
+			currentAnimation = rightEatenAnimation;
+			currentAnimation.start();
+		}
+		else if (direction.equals("down") && state.equals("eaten")){
+			currentAnimation.stop();
+			currentAnimation = downEatenAnimation;
+			currentAnimation.start();
+		}
+		else if (state.equals("flashing")){
+			currentAnimation.stop();
+			currentAnimation = flashingAnimation;
+			currentAnimation.start();
+		}
+		
 	}
 	
 	public String getType(){
@@ -213,7 +244,8 @@ public class Ghost implements Entity{
 	}
 	
 	public void setStateFlashing(){
-		
+		state = "flashing";
+		updateCurrentAnimation();
 	}
 	
 }

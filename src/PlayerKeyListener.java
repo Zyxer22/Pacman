@@ -6,6 +6,7 @@ public class PlayerKeyListener implements KeyListener {
 	private Pacman pacman;
 	private GhostManager gm;
 	private Input input;
+	int _switch = 0;
 	
 	//debug to test ghost animations
 	int state = 0;
@@ -58,11 +59,18 @@ public class PlayerKeyListener implements KeyListener {
 		else if (key == Input.KEY_L){
 			//state is Running, Chasing, Eaten, Orb, and 4 directions
 			state = state % 8;
+			
 			Ghost[] ghosts = gm.getGhosts();
 			for (Ghost ghost : ghosts){
 				if (state == 0){
 					ghost.setDirectionDown();
-					ghost.setStateChasing();
+					if (_switch%2 == 0){
+						ghost.setStateChasing();
+					}
+					else{
+						System.out.println("State = eaten");
+						ghost.setStateEaten();
+					}
 				}
 				else if (state == 1){
 					ghost.setDirectionLeft();
@@ -83,8 +91,13 @@ public class PlayerKeyListener implements KeyListener {
 					ghost.setStateOrb();
 				}
 				else if (state == 7){
-					ghost.setStateEaten();
+					ghost.setStateFlashing();
+					
+					System.out.println("_swtich=" + _switch);
 				}
+			}
+			if (state == 7){
+				_switch++;
 			}
 			state++;
 		}
