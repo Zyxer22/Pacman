@@ -10,13 +10,17 @@ public class Ghost implements Entity{
 	private Animation upAnimation;
 	private Animation downAnimation;
 	private Animation currentAnimation;
+	private Animation orbAnimation;
+	private Animation eatenAnimation;
 	private int currentFrame;
 	private String direction;
 	private String type;
+	private String state;
 	
-	public Ghost(Image[] sprites, String type){
-		position = new Position(270, 300);
+	public Ghost(Image[] sprites, String type, float x, float y, String state){
+		position = new Position(x, y);
 		this.sprites = sprites;
+		this.state = state;
 		
 		//create animations
 		
@@ -36,14 +40,20 @@ public class Ghost implements Entity{
 		rightSprites[0] = sprites[6];
 		rightSprites[1] = sprites[7];
 		
+		Image[] orbSprites = new Image[2];
+		orbSprites[0] = sprites[8];
+		orbSprites[1]= sprites[9];
+		
+		Image[] eatenSprites = new Image[2];
+		eatenSprites[0] = sprites[10];
+		eatenSprites[1] = sprites[11];
+		
 		leftAnimation = new Animation(leftSprites, SpriteManager.animationFrames);
-		leftAnimation.setPingPong(true);
 		rightAnimation = new Animation(rightSprites, SpriteManager.animationFrames);
-		rightAnimation.setPingPong(true);
 		upAnimation = new Animation(upSprites, SpriteManager.animationFrames);
-		upAnimation.setPingPong(true);
 		downAnimation = new Animation(downSprites, SpriteManager.animationFrames);
-		downAnimation.setPingPong(true);
+		orbAnimation = new Animation(orbSprites, SpriteManager.animationFrames);
+		eatenAnimation = new Animation(eatenSprites, SpriteManager.animationFrames);
 		
 		currentAnimation = leftAnimation;
 		startCurrentAnimation();
@@ -110,18 +120,22 @@ public class Ghost implements Entity{
 	
 	public void setDirectionDown(){
 		direction = "down";
+		updateCurrentAnimation();
 	}
 	
 	public void setDirectionUp(){
 		direction = "up";
+		updateCurrentAnimation();
 	}
 	
 	public void setDirectionLeft(){
 		direction = "left";
+		updateCurrentAnimation();
 	}
 	
 	public void setDirectionRight(){
 		direction = "right";
+		updateCurrentAnimation();
 	}
 	
 	public String getDirection(){
@@ -129,7 +143,7 @@ public class Ghost implements Entity{
 	}
 	
 	public void updateCurrentAnimation(){
-		if (direction.equals("left")){
+		if (direction.equals("left") && (state.equals("chasing") || state.equals("running"))){
 			//frame matching
 			currentAnimation.stop();
 			currentFrame = currentAnimation.getFrame();
@@ -137,24 +151,38 @@ public class Ghost implements Entity{
 			currentAnimation.setCurrentFrame(currentFrame);
 			currentAnimation.start();
 		}
-		else if (direction.equals("right")){
+		else if (direction.equals("right") && (state.equals("chasing") || state.equals("running"))){
 			currentAnimation.stop();
 			currentFrame = currentAnimation.getFrame();
 			currentAnimation = rightAnimation;
 			currentAnimation.setCurrentFrame(currentFrame);
 			currentAnimation.start();
 		}
-		else if (direction.equals("up")){
+		else if (direction.equals("up") && (state.equals("chasing") || state.equals("running"))){
 			currentAnimation.stop();
 			currentFrame = currentAnimation.getFrame();
 			currentAnimation = upAnimation;
 			currentAnimation.setCurrentFrame(currentFrame);
 			currentAnimation.start();
 		}
-		else if (direction.equals("down")){
+		else if (direction.equals("down") && (state.equals("chasing") || state.equals("running"))){
 			currentAnimation.stop();
 			currentFrame = currentAnimation.getFrame();
 			currentAnimation = downAnimation;
+			currentAnimation.setCurrentFrame(currentFrame);
+			currentAnimation.start();
+		}
+		else if (state.equals("orb")){
+			currentAnimation.stop();
+			currentFrame = currentAnimation.getFrame();
+			currentAnimation = orbAnimation;
+			currentAnimation.setCurrentFrame(currentFrame);
+			currentAnimation.start();
+		}
+		else if (state.equals("eaten")){
+			currentAnimation.stop();
+			currentFrame = currentAnimation.getFrame();
+			currentAnimation = eatenAnimation;
 			currentAnimation.setCurrentFrame(currentFrame);
 			currentAnimation.start();
 		}
@@ -162,6 +190,30 @@ public class Ghost implements Entity{
 	
 	public String getType(){
 		return type;
+	}
+	
+	public void setStateChasing(){
+		state = "chasing";
+		updateCurrentAnimation();
+	}
+	
+	public void setStateOrb(){
+		state = "orb";
+		updateCurrentAnimation();
+	}
+	
+	public void setStateEaten(){
+		state = "eaten";
+		updateCurrentAnimation();
+	}
+	
+	public void setStateRunning(){
+		state = "running";
+		updateCurrentAnimation();
+	}
+	
+	public void setStateFlashing(){
+		
 	}
 	
 }

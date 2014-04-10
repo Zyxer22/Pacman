@@ -4,10 +4,15 @@ import org.newdawn.slick.KeyListener;
 
 public class PlayerKeyListener implements KeyListener {
 	private Pacman pacman;
+	private GhostManager gm;
 	private Input input;
 	
-	public PlayerKeyListener(Pacman pacman){
+	//debug to test ghost animations
+	int state = 0;
+	
+	public PlayerKeyListener(Pacman pacman, GhostManager gm){
 		this.pacman = pacman;
+		this.gm = gm;
 	}
 	
 	@Override
@@ -49,6 +54,39 @@ public class PlayerKeyListener implements KeyListener {
 		}
 		else if (key == Input.KEY_RIGHT){
 			pacman.setDirectionRight();
+		}
+		else if (key == Input.KEY_L){
+			//state is Running, Chasing, Eaten, Orb, and 4 directions
+			state = state % 8;
+			Ghost[] ghosts = gm.getGhosts();
+			for (Ghost ghost : ghosts){
+				if (state == 0){
+					ghost.setDirectionDown();
+					ghost.setStateChasing();
+				}
+				else if (state == 1){
+					ghost.setDirectionLeft();
+				}
+				else if (state == 2){
+					ghost.setDirectionUp();
+				}
+				else if (state == 3){
+					ghost.setDirectionRight();
+				}
+				else if (state == 4){
+					ghost.setStateRunning();
+				}
+				else if (state == 5){
+					ghost.setStateChasing();
+				}
+				else if (state == 6){
+					ghost.setStateOrb();
+				}
+				else if (state == 7){
+					ghost.setStateEaten();
+				}
+			}
+			state++;
 		}
 	}
 
