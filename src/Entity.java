@@ -12,4 +12,6 @@ public interface Entity {
 	public float getY();
 	
 	public Position getPosition();
+	
+	public String getDirection();
 }

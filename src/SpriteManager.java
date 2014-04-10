@@ -32,4 +32,21 @@ public class SpriteManager {
 		return sprites;
 	}
 	
+	public Image[] getRedGhostSprites(){
+		Image[] sprites = new Image[12];
+		sprites[0] = spriteSheet.getSprite(0, 4);
+		sprites[1] = spriteSheet.getSprite(1, 4);
+		sprites[2] = spriteSheet.getSprite(2, 4);
+		sprites[3] = spriteSheet.getSprite(3, 4);
+		sprites[4] = spriteSheet.getSprite(4, 4);
+		sprites[5] = spriteSheet.getSprite(5, 4);
+		sprites[6] = spriteSheet.getSprite(6, 4);
+		sprites[7] = spriteSheet.getSprite(7, 4);
+		sprites[8] = spriteSheet.getSprite(0, 8);
+		sprites[9] = spriteSheet.getSprite(1, 8);
+		sprites[10] = spriteSheet.getSprite(2, 8);
+		sprites[11] = spriteSheet.getSprite(3, 8);
+		return sprites;
+	}
+	
 }

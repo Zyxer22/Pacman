@@ -21,6 +21,7 @@ public class SimpleSlickGame extends BasicGame
 	Input playerInput;
 	PlayerKeyListener pkl;
 	int timeBetweenMove = 0;
+	Ghost[] ghosts;
 	public SimpleSlickGame(String gamename)
 	{
 		super(gamename);
@@ -31,6 +32,8 @@ public class SimpleSlickGame extends BasicGame
 		sm = new SpriteManager();
 		gb = new GameBoard();
 		pm = new Pacman(sm.getPacmanSprites());
+		ghosts = new Ghost[4];
+		ghosts[0] = new Ghost(sm.getRedGhostSprites(), "red");		
 		pkl = new PlayerKeyListener(pm);
 		gc.getInput().addKeyListener(pkl);
 		gb.addEntity(pm);
@@ -74,6 +77,7 @@ public class SimpleSlickGame extends BasicGame
 		//gb.renderBackground();
 		g.drawImage(gb.getBG(), 0, 0);
 		pm.drawCurrentAnimation();
+		ghosts[0].drawCurrentAnimation();
 		
 		
 	}
