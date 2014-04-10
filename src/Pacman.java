@@ -11,8 +11,11 @@ public class Pacman implements Entity{
 	private Animation upAnimation;
 	private Animation downAnimation;
 	private Animation currentAnimation;
+	private Animation deathAnimation;
 	private int currentFrame;
 	private String direction;
+	private String state;
+	private boolean wasStateChange = false;
 	
 	public Pacman(Image[] sprites){
 		position = new Position(270, 342);
@@ -40,6 +43,20 @@ public class Pacman implements Entity{
 		downSprites[1] = sprites[7];
 		downSprites[2] = sprites[2];
 		
+		Image[] deathSprites = new Image[12];
+		deathSprites[0] = sprites[9];
+		deathSprites[1] = sprites[10];
+		deathSprites[2] = sprites[11];
+		deathSprites[3] = sprites[12];
+		deathSprites[4] = sprites[13];
+		deathSprites[5] = sprites[14];
+		deathSprites[6] = sprites[15];
+		deathSprites[7] = sprites[16];
+		deathSprites[8] = sprites[17];
+		deathSprites[9] = sprites[18];
+		deathSprites[10] = sprites[19];
+		deathSprites[11] = sprites[20];
+		
 		leftAnimation = new Animation(leftSprites, SpriteManager.animationFrames);
 		leftAnimation.setPingPong(true);
 		rightAnimation = new Animation(rightSprites, SpriteManager.animationFrames);
@@ -48,10 +65,15 @@ public class Pacman implements Entity{
 		upAnimation.setPingPong(true);
 		downAnimation = new Animation(downSprites, SpriteManager.animationFrames);
 		downAnimation.setPingPong(true);
+		deathAnimation = new Animation(deathSprites, SpriteManager.animationFrames);
+		deathAnimation.setSpeed(1.5f);
+		deathAnimation.setLooping(false);
 		
 		currentAnimation = leftAnimation;
-		startCurrentAnimation();
 		direction = "left";
+		state = "moving";
+		startCurrentAnimation();
+		
 		
 	}
 	
@@ -113,18 +135,22 @@ public class Pacman implements Entity{
 	}
 	
 	public void setDirectionDown(){
+		wasStateChange = true;
 		direction = "down";
 	}
 	
 	public void setDirectionUp(){
+		wasStateChange = true;
 		direction = "up";
 	}
 	
 	public void setDirectionLeft(){
+		wasStateChange = true;
 		direction = "left";
 	}
 	
 	public void setDirectionRight(){
+		wasStateChange = true;
 		direction = "right";
 	}
 	
@@ -133,34 +159,88 @@ public class Pacman implements Entity{
 	}
 	
 	public void updateCurrentAnimation(){
-		if (direction.equals("left")){
+		if (!wasStateChange){
+			return;
+		}
+
+		if (direction.equals("left") && state.equals("moving")){
 			//frame matching
 			currentAnimation.stop();
-			currentFrame = currentAnimation.getFrame();
+			currentFrame = currentAnimation.getFrame() % leftAnimation.getFrameCount();
 			currentAnimation = leftAnimation;
 			currentAnimation.setCurrentFrame(currentFrame);
 			currentAnimation.start();
 		}
-		else if (direction.equals("right")){
+		else if (direction.equals("right") && state.equals("moving")){
 			currentAnimation.stop();
-			currentFrame = currentAnimation.getFrame();
+			currentFrame = currentAnimation.getFrame() % rightAnimation.getFrameCount();
 			currentAnimation = rightAnimation;
 			currentAnimation.setCurrentFrame(currentFrame);
 			currentAnimation.start();
 		}
-		else if (direction.equals("up")){
+		else if (direction.equals("up") && state.equals("moving")){
 			currentAnimation.stop();
-			currentFrame = currentAnimation.getFrame();
+			currentFrame = currentAnimation.getFrame() % upAnimation.getFrameCount();
 			currentAnimation = upAnimation;
 			currentAnimation.setCurrentFrame(currentFrame);
 			currentAnimation.start();
 		}
-		else if (direction.equals("down")){
+		else if (direction.equals("down") && state.equals("moving")){
 			currentAnimation.stop();
-			currentFrame = currentAnimation.getFrame();
+			currentFrame = currentAnimation.getFrame() % downAnimation.getFrameCount();
 			currentAnimation = downAnimation;
 			currentAnimation.setCurrentFrame(currentFrame);
 			currentAnimation.start();
+		}
+		else if (state.equals("dead")){
+			currentAnimation.stop();
+			currentAnimation = deathAnimation;
+			currentAnimation.restart();
+		}
+		
+		wasStateChange = false;
+	}
+	
+	public void setStateMoving(){
+		state = "moving";
+		wasStateChange = true;
+		updateCurrentAnimation();
+	}
+	
+	public void setStateDead(){
+		state = "dead";
+		wasStateChange = true;
+		updateCurrentAnimation();
+	}
+	
+	public boolean isDead(){
+		if (state.equals("dead")){
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+	
+	public void move(){
+		float curX, curY;
+		curX = getX();
+		curY = getY();
+		if (getDirection().equals("left") && !isDead()){
+			curX -= GameBoard.tileLength/4;
+			setX(curX);
+		}
+		else if (getDirection().equals("right") && !isDead()){
+			curX += GameBoard.tileLength/4;
+			setX(curX);
+		}
+		else if (getDirection().equals("up") && !isDead()){
+			curY -= GameBoard.tileLength/4;
+			setY(curY);
+		}
+		else if (getDirection().equals("down") && !isDead()){
+			curY += GameBoard.tileLength/4;
+			setY(curY);
 		}
 	}
 }

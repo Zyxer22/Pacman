@@ -21,6 +21,7 @@ public class SimpleSlickGame extends BasicGame
 	Input playerInput;
 	PlayerKeyListener pkl;
 	GhostManager gm;
+	Orb largeOrb, smallOrb;
 	int timeBetweenMove = 0;
 	
 	public SimpleSlickGame(String gamename)
@@ -35,10 +36,14 @@ public class SimpleSlickGame extends BasicGame
 		pm = new Pacman(sm.getPacmanSprites());
 		gm =new GhostManager();
 		gm.initializeGhosts(sm);
-				
+		
+		largeOrb = new Orb(sm.getOrbSprites(), 200, 230, "large");
+		smallOrb = new Orb(sm.getOrbSprites(), 220, 232f, "small");
 		pkl = new PlayerKeyListener(pm, gm);
 		gc.getInput().addKeyListener(pkl);
 		gb.addEntity(pm);
+		gb.addEntity(largeOrb);
+		gb.addEntity(smallOrb);
 	}
 
 	@Override
@@ -80,6 +85,8 @@ public class SimpleSlickGame extends BasicGame
 		g.drawImage(gb.getBG(), 0, 0);
 		pm.drawCurrentAnimation();
 		gm.renderGhosts();
+		largeOrb.drawCurrentAnimation();
+		smallOrb.drawCurrentAnimation();
 		
 		
 	}

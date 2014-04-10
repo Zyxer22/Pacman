@@ -40,27 +40,8 @@ public class GameBoard {
 	public void updateEntityPosition(){
 		String direction;
 		for (Entity entity : entities){
-			Pacman pm = (Pacman)entity;
-			Position curPosition = pm.getPosition();
-			float curX, curY;
-			curX = curPosition.getX();
-			curY = curPosition.getY();
-			if (pm.getDirection().equals("left")){
-				curX -= GameBoard.tileLength/4;
-				pm.setX(curX);
-			}
-			else if (pm.getDirection().equals("right")){
-				curX += GameBoard.tileLength/4;
-				pm.setX(curX);
-			}
-			else if (pm.getDirection().equals("up")){
-				curY -= GameBoard.tileLength/4;
-				pm.setY(curY);
-			}
-			else if (pm.getDirection().equals("down")){
-				curY += GameBoard.tileLength/4;
-				pm.setY(curY);
-			}
+			entity.move();
+			
 		}
 	}
 }

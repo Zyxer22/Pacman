@@ -51,7 +51,7 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/slick2d/lib/slick.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="file:/E:/Pacman/slick2d/javadoc/"/>
+			<attribute name="javadoc_location" value="file:/C:/slick2d/javadoc/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/slick2d/lib/slick-examples.jar"/>

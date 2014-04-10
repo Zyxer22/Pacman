@@ -14,4 +14,6 @@ public interface Entity {
 	public Position getPosition();
 	
 	public String getDirection();
+	
+	public void move();
 }

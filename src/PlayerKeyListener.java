@@ -56,6 +56,12 @@ public class PlayerKeyListener implements KeyListener {
 		else if (key == Input.KEY_RIGHT){
 			pacman.setDirectionRight();
 		}
+		else if (key == Input.KEY_K){
+			pacman.setStateDead();
+		}
+		else if (key == Input.KEY_J){
+			pacman.setStateMoving();
+		}
 		else if (key == Input.KEY_L){
 			//state is Running, Chasing, Eaten, Orb, and 4 directions
 			state = state % 8;

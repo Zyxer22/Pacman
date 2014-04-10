@@ -247,5 +247,11 @@ public class Ghost implements Entity{
 		state = "flashing";
 		updateCurrentAnimation();
 	}
+
+	@Override
+	public void move() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
