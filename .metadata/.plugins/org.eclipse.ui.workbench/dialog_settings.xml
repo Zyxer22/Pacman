@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
 	<section name="org.eclipse.ui.internal.QuickAccess">
-		<item value="672" key="dialogWidth"/>
+		<item value="1025" key="dialogWidth"/>
 		<item value="555" key="dialogHeight"/>
 		<list key="orderedProviders">
 		</list>
@@ -16,5 +16,7 @@
 		<item value="org.eclipse.jdt.ui.wizards.NewClassCreationWizard" key="NewWizardSelectionPage.STORE_SELECTED_ID"/>
 		<list key="NewWizardSelectionPage.STORE_EXPANDED_CATEGORIES_ID">
 		</list>
+	</section>
+	<section name="ImportExportAction">
 	</section>
 </section>
