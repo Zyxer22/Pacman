@@ -11,6 +11,7 @@ import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
+import org.newdawn.slick.geom.Rectangle;
 
 public class SimpleSlickGame extends BasicGame
 {
@@ -34,7 +35,7 @@ public class SimpleSlickGame extends BasicGame
 		sm = new SpriteManager();
 		gb = new GameBoard();
 		pm = new Pacman(sm.getPacmanSprites());
-		gm =new GhostManager();
+		gm = new GhostManager();
 		gm.initializeGhosts(sm);
 		
 		largeOrb = new Orb(sm.getOrbSprites(), 200, 230, "large");
@@ -44,20 +45,30 @@ public class SimpleSlickGame extends BasicGame
 		gb.addEntity(pm);
 		gb.addEntity(largeOrb);
 		gb.addEntity(smallOrb);
+		gb.addEntity(gm.getBlueGhost());
+		gb.addEntity(gm.getRedGhost());
+		gb.addEntity(gm.getYellowGhost());
+		gb.addEntity(gm.getPinkGhost());
+		gm.getYellowLogic().start();
 	}
 
 	@Override
 	public void update(GameContainer gc, int i) throws SlickException {
 		//get player input
-		timeBetweenMove += i;
-		playerInput = gc.getInput();
-		pm.updateCurrentAnimation();
-		
-		if (timeBetweenMove >= 75){
-			gb.updateEntityPosition();
-			timeBetweenMove = 0;
+		if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE))
+				gc.exit();
+		else if (gc.getInput().isKeyPressed(Input.KEY_P))
+		    gc.setPaused(!gc.isPaused());
+		else if(!gc.isPaused()){
+			timeBetweenMove += i;
+			//playerInput = gc.getInput();
+			pm.updateCurrentAnimation();
+			
+			if (timeBetweenMove >= 75){
+				gb.updateEntityPosition();
+				timeBetweenMove = 0;
+			}
 		}
-		
 		
 		
 	}
@@ -82,13 +93,13 @@ public class SimpleSlickGame extends BasicGame
 		*/
 		
 		//gb.renderBackground();
-		g.drawImage(gb.getBG(), 0, 0);
-		pm.drawCurrentAnimation();
-		gm.renderGhosts();
-		largeOrb.drawCurrentAnimation();
-		smallOrb.drawCurrentAnimation();
-		
-		
+		  
+		    g.drawImage(gb.getBG(), 0, 0);
+			pm.drawCurrentAnimation();
+			gm.renderGhosts();
+			largeOrb.drawCurrentAnimation();
+			smallOrb.drawCurrentAnimation();
+			
 	}
 
 	public static void main(String[] args)

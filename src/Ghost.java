@@ -20,11 +20,16 @@ public class Ghost implements Entity{
 	private String direction;
 	private String type;
 	private String state;
+	private boolean sleeping = true;
+	private final long restTimer;
+	private int timeLeft;
 	
-	public Ghost(Image[] sprites, String type, float x, float y, String state){
+	public Ghost(Image[] sprites, String type, float x, float y, String state, int restTimer){
 		position = new Position(x, y);
 		this.sprites = sprites;
 		this.state = state;
+		this.restTimer = restTimer;
+		this.timeLeft = 1000*restTimer;
 		
 		//create animations
 		
@@ -77,9 +82,9 @@ public class Ghost implements Entity{
 		downEatenAnimation = new Animation(downEatenSprites, SpriteManager.animationFrames);
 		rightEatenAnimation = new Animation(rightEatenSprites, SpriteManager.animationFrames);
 		
-		currentAnimation = leftAnimation;
+		currentAnimation = upAnimation;
 		startCurrentAnimation();
-		direction = "left";
+		direction = "up";
 		
 	}
 	
@@ -247,10 +252,43 @@ public class Ghost implements Entity{
 		state = "flashing";
 		updateCurrentAnimation();
 	}
+	public int decrementTime(){
+		return timeLeft--;
+	}
+	public long timer(){
+		return restTimer;
+	}
+	public void sleep(){
+		sleeping = true;
+	}
+	public boolean isAsleep(){
+		return sleeping;
+	}
+	public void wake(){
+		sleeping = false;
+	}
 
 	@Override
 	public void move() {
-		// TODO Auto-generated method stub
+		float curX, curY;
+		curX = getX();
+		curY = getY();
+		if (getDirection().equals("left") && !isAsleep()){
+			curX -= GameBoard.tileLength/4;
+			setX(curX);
+		}
+		else if (getDirection().equals("right") && !isAsleep()){
+			curX += GameBoard.tileLength/4;
+			setX(curX);
+		}
+		else if (getDirection().equals("up") && !isAsleep()){
+			curY -= GameBoard.tileLength/4;
+			setY(curY);
+		}
+		else if (getDirection().equals("down") && !isAsleep()){
+			curY += GameBoard.tileLength/4;
+			setY(curY);
+		}
 		
 	}
 	
