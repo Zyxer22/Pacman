@@ -292,4 +292,8 @@ public class Ghost implements Entity{
 		
 	}
 	
+	public void calculatePath(){
+		
+	}
+	
 }

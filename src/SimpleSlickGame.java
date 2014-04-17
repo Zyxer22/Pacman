@@ -24,6 +24,8 @@ public class SimpleSlickGame extends BasicGame
 	GhostManager gm;
 	Orb largeOrb, smallOrb;
 	int timeBetweenMove = 0;
+	UnicodeFont ufont;
+	Font font;
 	
 	public SimpleSlickGame(String gamename)
 	{
@@ -50,6 +52,15 @@ public class SimpleSlickGame extends BasicGame
 		gb.addEntity(gm.getYellowGhost());
 		gb.addEntity(gm.getPinkGhost());
 		gm.getYellowLogic().start();
+		
+		
+		Font font = new Font("Serif", Font.BOLD, 15);
+		ufont = new UnicodeFont(font, font.getSize(), font.isBold(), font.isItalic());
+		ufont.addAsciiGlyphs();
+		ufont.addGlyphs(400, 600);
+		ufont.getEffects().add(new ColorEffect(java.awt.Color.WHITE));
+		ufont.loadGlyphs();
+		
 	}
 
 	@Override
@@ -76,29 +87,24 @@ public class SimpleSlickGame extends BasicGame
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException
 	{
-		/*
-		g.setColor(new Color(50, 50, 50, 180));
-		g.fillRect(0, 0, 640, 480);
-		g.setColor(Color.white);
-		UnicodeFont ufont;
-		Font font = new Font("Serif", Font.BOLD, 15);
-		ufont = new UnicodeFont(font, font.getSize(), font.isBold(), font.isItalic());
-		ufont.addAsciiGlyphs();
-		ufont.addGlyphs(400, 600);
-		ufont.getEffects().add(new ColorEffect(java.awt.Color.WHITE));
-		ufont.loadGlyphs();
-		g.setFont(ufont);
-		g.drawString("test", 32, 32);
-		sm.test(200, 200);
-		*/
+		
+		
+		
 		
 		//gb.renderBackground();
 		  
-		    g.drawImage(gb.getBG(), 0, 0);
+		    //g.drawImage(gb.getBG(), 0, 0);
+			gb.renderTileMap();
 			pm.drawCurrentAnimation();
 			gm.renderGhosts();
 			largeOrb.drawCurrentAnimation();
 			smallOrb.drawCurrentAnimation();
+			
+			//g.setColor(new Color(50, 50, 50, 180));
+			//g.fillRect(0, 0, 640, 480);
+			g.setColor(Color.white);
+			g.setFont(ufont);
+			g.drawString(Integer.toString(gb.getTileId(pm)), pm.getX(), pm.getY() + 10);
 			
 	}
 

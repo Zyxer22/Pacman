@@ -48,7 +48,7 @@ public class GhostManager {
 	        if(getYellowGhost().isAsleep())
 				try {
 					Thread.sleep(getYellowGhost().timer()*10);
-					getYellowGhost().wake();
+					//getYellowGhost().wake();
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
