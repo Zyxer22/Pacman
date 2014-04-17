@@ -16,11 +16,16 @@ public class Pacman implements Entity{
 	private String direction;
 	private String state;
 	private boolean wasStateChange = false;
+	private Vector2Float size;
+	private Vector2Float center;
+	private AABB box;
 	
 	public Pacman(Image[] sprites){
 		position = new Position(270, 342);
 		this.sprites = sprites;
-		
+		this.size = new Vector2Float(sprites[0].getWidth(), sprites[0].getHeight());
+		this.center = new Vector2Float(135,171);
+		this.box = new AABB(center,size);
 		//create animations
 		
 		Image[] leftSprites = new Image[3];
@@ -242,5 +247,20 @@ public class Pacman implements Entity{
 			curY += GameBoard.tileLength/4;
 			setY(curY);
 		}
+		updateCenter();
+	}
+
+	@Override
+	public Vector2Float getSize() {
+		return this.size;
+	}
+	@Override
+	public void updateCenter(){
+		this.center.set(this.getX(),this.getY());
+	}
+
+	@Override
+	public AABB getBox() {
+		return this.box;
 	}
 }

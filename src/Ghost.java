@@ -21,16 +21,18 @@ public class Ghost implements Entity{
 	private String type;
 	private String state;
 	private boolean sleeping = true;
-	private final long restTimer;
-	private int timeLeft;
+	private final long restTimer = 500;
+	public AABB box;
+	public Vector2Float size;
+	private Vector2Float center;
 	
-	public Ghost(Image[] sprites, String type, float x, float y, String state, int restTimer){
+	public Ghost(Image[] sprites, String type, float x, float y, String state){
 		position = new Position(x, y);
 		this.sprites = sprites;
 		this.state = state;
-		this.restTimer = restTimer;
-		this.timeLeft = 1000*restTimer;
-		
+		this.size = new Vector2Float(sprites[0].getWidth(), sprites[0].getHeight());
+		this.center = new Vector2Float(x,y);
+		this.box = new AABB(center,size);
 		//create animations
 		
 		Image[] upSprites = new Image[2];
@@ -252,11 +254,12 @@ public class Ghost implements Entity{
 		state = "flashing";
 		updateCurrentAnimation();
 	}
-	public int decrementTime(){
-		return timeLeft--;
-	}
-	public long timer(){
-		return restTimer;
+
+	public long putToSleep(double offset){
+		//the offset multiplies the default sleep time
+		if(offset <= 0)
+			return restTimer;
+		return (long) (offset * restTimer);
 	}
 	public void sleep(){
 		sleeping = true;
@@ -289,7 +292,21 @@ public class Ghost implements Entity{
 			curY += GameBoard.tileLength/4;
 			setY(curY);
 		}
-		
+		updateCenter();
+	}
+
+	@Override
+	public Vector2Float getSize() {
+		return this.size;
+	}
+	@Override
+	public void updateCenter(){
+		this.center.set(this.getX(),this.getY());
+	}
+
+	@Override
+	public AABB getBox() {
+		return this.box;
 	}
 	
 }

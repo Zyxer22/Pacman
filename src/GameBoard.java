@@ -13,6 +13,9 @@ public class GameBoard {
 	public static final int width = 560;
 	public static final int length = 620;
 	public static final int tileLength = 20;
+	public static final Vector2Float size = new Vector2Float(280,310);
+	public static final Vector2Float center = new Vector2Float(280,310);
+	public static final AABB absoluteBoundary = new AABB(center,size); 
 	List<Entity> entities;
 	
 	public static final String spritePath = "/background.png";
@@ -38,9 +41,9 @@ public class GameBoard {
 	}
 	
 	public void updateEntityPosition(){
-		String direction;
 		for (Entity entity : entities){
-			entity.move();
+			//if(AABB.inside(absoluteBoundary, entity.getBox().center))
+					entity.move();
 			
 		}
 	}

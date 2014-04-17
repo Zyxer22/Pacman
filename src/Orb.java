@@ -13,10 +13,17 @@ public class Orb implements Entity{
 	private boolean isLargeOrb; //true is large, false is small
 	private boolean isVisible;
 	private boolean wasStateChange;
+	private final Vector2Float size;
+	private Vector2Float center;
+	private AABB box;
 	
 	Orb(Image[] sprites, float x, float y, String size){
 		direction = "null";
 		this.sprites = sprites;
+		
+		this.size = new Vector2Float(2, 2);
+		this.center = new Vector2Float(x,y);
+		this.box = new AABB(center,this.size);
 		
 		Image[] largeOrbSprites = new Image[1];
 		largeOrbSprites[0] = sprites[1];
@@ -141,5 +148,19 @@ public class Orb implements Entity{
 	public void move() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Vector2Float getSize() {
+		return this.size;
+	}
+	@Override
+	public void updateCenter(){
+		this.center.set(this.getX(),this.getY());
+	}
+
+	@Override
+	public AABB getBox() {
+		return this.box;
 	}
 }

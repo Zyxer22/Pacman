@@ -16,4 +16,11 @@ public interface Entity {
 	public String getDirection();
 	
 	public void move();
+	
+	public Vector2Float getSize();
+	
+	public void updateCenter();
+	
+	public AABB getBox();
+
 }

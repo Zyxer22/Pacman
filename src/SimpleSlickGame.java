@@ -49,7 +49,10 @@ public class SimpleSlickGame extends BasicGame
 		gb.addEntity(gm.getRedGhost());
 		gb.addEntity(gm.getYellowGhost());
 		gb.addEntity(gm.getPinkGhost());
+		gm.getBlueLogic().start();
+		gm.getRedLogic().start();
 		gm.getYellowLogic().start();
+		gm.getPinkLogic().start();
 	}
 
 	@Override
