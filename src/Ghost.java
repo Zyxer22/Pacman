@@ -309,4 +309,8 @@ public class Ghost implements Entity{
 		return this.box;
 	}
 	
+	public void calculatePath(){
+		
+	}
+	
 }
