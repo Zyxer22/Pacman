@@ -348,9 +348,7 @@ public class Pacman implements Entity{
 						case "truetrue"		:	points = 50;
 												this.setSpeedMod(FAST);
 												this.killCount = 0;
-												for(int j = 1; j < 5; j++)
-													if(!((Ghost) entities.get(j)).getState().equals("eaten"))
-														((Ghost) entities.get(j)).setStateOrb();
+												GhostManager.setGhostsOrb();
 												orb.setNotVisible();
 												entities.remove(i);
 												System.out.println("Something large eaten");

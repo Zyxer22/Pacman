@@ -77,10 +77,14 @@ public class SimpleSlickGame extends BasicGame
 		    gc.setPaused(!gc.isPaused());
 		else if(!gc.isPaused()){
 			timeBetweenMove += i;
-			//playerInput = gc.getInput();
 			pm.updateCurrentAnimation();
 			
 			if (timeBetweenMove >= 60){
+				gm.decrementOrbTimer();
+				if(gm.getOrbTimer() <= 0)
+					gm.setGhostsChasing();
+				else if(gm.getOrbTimer() < 90)
+					gm.setGhostsFlashing();
 				gb.updateEntityPosition();
 				timeBetweenMove = 0;
 			}

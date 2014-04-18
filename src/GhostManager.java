@@ -1,6 +1,8 @@
 
 public class GhostManager {
-	Ghost[] ghosts;
+	static Ghost[] ghosts;
+	static int orbTimer = 80000;
+	private static boolean timerOn = false;
 	
 	public GhostManager(){
 		ghosts = new Ghost[4];
@@ -64,6 +66,41 @@ public class GhostManager {
 		for (Ghost ghost : ghosts){
 			ghost.drawCurrentAnimation();
 		}
+	}
+	public void setGhostsChasing(){
+		for (Ghost ghost : ghosts)
+			if(!ghost.getState().equals("eaten"))
+				ghost.setStateChasing();
+		orbTimer = 80000;
+		timerOn = false;
+	}
+	public void setGhostsFlashing(){
+		for (Ghost ghost : ghosts)
+			if(!ghost.getState().equals("eaten"))
+				ghost.setStateFlashing();
+	}
+	public static void setGhostsOrb(){
+		for (Ghost ghost : ghosts)
+			if(!ghost.getState().equals("eaten"))
+				ghost.setStateOrb();
+		orbTimer = 225;
+		timerOn = true;
+	}
+	public void resetOrbTimer(){
+		this.orbTimer = 0;
+	}
+	public void decrementOrbTimer(){
+		if(timerOn)
+			orbTimer--;
+	}
+	public int getOrbTimer(){
+		return orbTimer;
+	}
+	public void turnOnTimer(){
+		this.timerOn = true;
+	}
+	public boolean isTimerOn(){
+		return timerOn;
 	}
 
 	
