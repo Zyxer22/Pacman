@@ -101,6 +101,7 @@ public class PlayerKeyListener implements KeyListener {
 					
 					System.out.println("_swtich=" + _switch);
 				}
+					System.out.println(ghost.getState());
 			}
 			if (state == 7){
 				_switch++;

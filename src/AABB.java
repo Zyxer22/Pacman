@@ -5,11 +5,11 @@ public class AABB {
 	public AABB(){}
 	public AABB(Vector2Float center, Vector2Float size){
 		this.center = center;
-		this.size = size;
+		this.size = size.divide(2);
 	}
 	public AABB(Entity entity){
 		this.center.set(entity.getX(),entity.getY());
-		this.size.set(entity.getSize());
+		this.size.set(entity.getSize().divide(2));
 	}
 
 	 public static boolean collides(AABB a, AABB b)
@@ -35,5 +35,10 @@ public class AABB {
 	         }
 	      }
 	      return false;
+	   }
+	   
+	   @Override
+	   public String toString(){
+		   return "Center:\t" + center + "\nSize:\t" + size;
 	   }
 	}

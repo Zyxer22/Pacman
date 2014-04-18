@@ -61,7 +61,9 @@ public class GameBoard {
 		entities.add(entity);
 	}
 	
-	public void updateEntityPosition(){		
+	public void updateEntityPosition(){
+		((Pacman) entities.get(0)).checkForGhost(entities);
+		((Pacman) entities.get(0)).checkForOrb(entities);
 		for (Entity entity : entities){
 			float oldX = entity.getX();
 			float oldY = entity.getY();
@@ -94,14 +96,12 @@ public class GameBoard {
 			
 			if ((entX >= objX - tileLength + tileOffset) && (entX <= (objX + objWidth))){
 				if ((entY >= objY - tileLength + tileOffset) && (entY <= (objY + objHeight))){
-					System.out.println("detected collision");
 					return true;
 				}
 				
 			}
 			else if ((entY >= objY - tileLength + tileOffset) && (entY <= (objY + objHeight))){
 				if ((entX >= objX - tileLength + tileOffset) && (entX <= (objX + objWidth))){
-					System.out.println("detected collision");
 					return true;
 				}
 			}

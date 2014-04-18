@@ -45,12 +45,12 @@ public class SimpleSlickGame extends BasicGame
 		pkl = new PlayerKeyListener(pm, gm);
 		gc.getInput().addKeyListener(pkl);
 		gb.addEntity(pm);
-		gb.addEntity(largeOrb);
-		gb.addEntity(smallOrb);
 		gb.addEntity(gm.getBlueGhost());
 		gb.addEntity(gm.getRedGhost());
 		gb.addEntity(gm.getYellowGhost());
 		gb.addEntity(gm.getPinkGhost());
+		gb.addEntity(largeOrb);
+		gb.addEntity(smallOrb);
 		gm.getBlueLogic().start();
 		gm.getRedLogic().start();
 		gm.getYellowLogic().start();
@@ -69,7 +69,7 @@ public class SimpleSlickGame extends BasicGame
 		//get player input
 		if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE))
 				gc.exit();
-		else if (gc.getInput().isKeyPressed(Input.KEY_P))
+		else if (gc.getInput().isKeyPressed(Input.KEY_P) || pm.isDead())
 		    gc.setPaused(!gc.isPaused());
 		else if(!gc.isPaused()){
 			timeBetweenMove += i;

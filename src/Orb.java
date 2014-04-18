@@ -17,13 +17,13 @@ public class Orb implements Entity{
 	private Vector2Float center;
 	private AABB box;
 	
-	Orb(Image[] sprites, float x, float y, String size){
+	Orb(Image[] sprites, float x, float y, String type){
 		direction = "null";
 		this.sprites = sprites;
 		
-		this.size = new Vector2Float(2, 2);
+		this.size = new Vector2Float(10, 10);
 		this.center = new Vector2Float(x,y);
-		this.box = new AABB(center,this.size);
+		this.box = new AABB(this.center,this.size);
 		
 		Image[] largeOrbSprites = new Image[1];
 		largeOrbSprites[0] = sprites[1];
@@ -38,7 +38,7 @@ public class Orb implements Entity{
 		smallOrbAnimation = new Animation(smallOrbSprites, SpriteManager.animationFrames);
 		blackAnimation = new Animation(blackSprites, SpriteManager.animationFrames);
 		
-		if (size.equals("large")){
+		if (type.equals("large")){
 			isLargeOrb = true;
 		}
 		else{
@@ -101,11 +101,13 @@ public class Orb implements Entity{
 	public void setVisible(){
 		isVisible = true;
 		wasStateChange = true;
+		updateCurrentAnimation();
 	}
 	
 	public void setNotVisible(){
 		isVisible = false;
 		wasStateChange = true;
+		updateCurrentAnimation();
 	}
 	
 	public void drawCurrentAnimation(){

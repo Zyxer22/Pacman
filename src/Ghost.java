@@ -22,17 +22,18 @@ public class Ghost implements Entity{
 	private String state;
 	private boolean sleeping = true;
 	private final long restTimer = 500;
-	public AABB box;
-	public Vector2Float size;
+	private AABB box;
+	private Vector2Float size;
 	private Vector2Float center;
 	
 	public Ghost(Image[] sprites, String type, float x, float y, String state){
 		position = new Position(x, y);
 		this.sprites = sprites;
 		this.state = state;
-		this.size = new Vector2Float(sprites[0].getWidth(), sprites[0].getHeight());
-		this.center = new Vector2Float(x,y);
+		this.size = new Vector2Float(sprites[0].getWidth()/2, sprites[0].getHeight()/2);
+		this.center = new Vector2Float(x/2,y/2);
 		this.box = new AABB(center,size);
+		this.type = type;
 		//create animations
 		
 		Image[] upSprites = new Image[2];
@@ -253,6 +254,9 @@ public class Ghost implements Entity{
 	public void setStateFlashing(){
 		state = "flashing";
 		updateCurrentAnimation();
+	}
+	public String getState(){
+		return this.state;
 	}
 
 	public long putToSleep(double offset){

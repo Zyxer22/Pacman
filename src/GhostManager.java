@@ -24,15 +24,7 @@ public class GhostManager {
  * 													*
  *              Get&Set for all ghosts              *
  *													*
- *==================================================*/
-	
-/*	private void escapeLogic(Ghost ghost){
-		float x = ghost.getX();
-		float y = 
-		if (x > )
-		
-	}
-*/	
+ *==================================================*/	
 
 	
 	public Thread getRedLogic(){

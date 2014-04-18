@@ -1,3 +1,5 @@
+import java.util.List;
+
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
@@ -19,11 +21,16 @@ public class Pacman implements Entity{
 	private Vector2Float size;
 	private Vector2Float center;
 	private AABB box;
+	private double speedMod = 1;
+	
+	private static final double FAST = 1.125;
+	private static final double DEFAULT = 1;
+	private static final double EATING = 0.8875;
 	
 	public Pacman(Image[] sprites){
 		position = new Position(270, 342);
 		this.sprites = sprites;
-		this.size = new Vector2Float(sprites[0].getWidth(), sprites[0].getHeight());
+		this.size = new Vector2Float(sprites[0].getWidth()/2, sprites[0].getHeight()/2);
 		this.center = new Vector2Float(135,171);
 		this.box = new AABB(center,size);
 		//create animations
@@ -162,6 +169,12 @@ public class Pacman implements Entity{
 	public String getDirection(){
 		return direction;
 	}
+	public double getSpeedMod(){
+		return speedMod;
+	}
+	private void setSpeedMod(double speedMod){
+		this.speedMod = speedMod;
+	}
 	
 	public void updateCurrentAnimation(){
 		if (!wasStateChange){
@@ -216,6 +229,7 @@ public class Pacman implements Entity{
 		state = "dead";
 		wasStateChange = true;
 		updateCurrentAnimation();
+		System.out.println("Pacman died :'(");
 	}
 	
 	public boolean isDead(){
@@ -231,23 +245,86 @@ public class Pacman implements Entity{
 		float curX, curY;
 		curX = getX();
 		curY = getY();
-		if (getDirection().equals("left") && !isDead()){
-			curX -= GameBoard.tileLength/4;
-			setX(curX);
-		}
-		else if (getDirection().equals("right") && !isDead()){
-			curX += GameBoard.tileLength/4;
-			setX(curX);
-		}
-		else if (getDirection().equals("up") && !isDead()){
-			curY -= GameBoard.tileLength/4;
-			setY(curY);
-		}
-		else if (getDirection().equals("down") && !isDead()){
-			curY += GameBoard.tileLength/4;
-			setY(curY);
+		if(!isDead()){
+			if (getDirection().equals("left")){
+				curX -= GameBoard.tileLength/4;
+				setX(curX);
+			}
+			else if (getDirection().equals("right")){
+				curX += GameBoard.tileLength/4;
+				setX(curX);
+			}
+			else if (getDirection().equals("up")){
+				curY -= GameBoard.tileLength/4;
+				setY(curY);
+			}
+			else if (getDirection().equals("down")){
+				curY += GameBoard.tileLength/4;
+				setY(curY);
+			}
 		}
 		updateCenter();
+	}
+	
+	public boolean checkForGhost(List<Entity> entities){
+		for(int i=1; i < 5; i++){
+			Ghost ghost = (Ghost) entities.get(i);
+			if( !this.isDead() && (AABB.collides(ghost.getBox(), getBox()) ||
+						AABB.inside(getBox(), ghost.getBox().center))){
+				switch(ghost.getState()){
+						case "chasing"	:	this.setStateDead();
+										 	break;
+						case "running"	:	this.setStateDead();
+						break;
+						case "orb"		:	ghost.setStateEaten();
+											this.setSpeedMod(EATING);
+											break;
+						case "flashing"	:	ghost.setStateEaten();
+											this.setSpeedMod(EATING);
+											break;
+						case "eaten"	:	break;
+						default			:	this.setStateDead();
+											break;
+				}
+				return true;
+			}
+		}
+		this.setSpeedMod(DEFAULT);
+		return false;
+	}
+	public boolean checkForOrb(List<Entity> entities){
+		for(int i=5; i < entities.size(); i++){
+			Orb orb = (Orb) entities.get(i);
+			//System.out.println(String.valueOf(orb.getIsLargeOrb())+orb.getIsVisible());
+			if( !this.isDead() && (AABB.collides(orb.getBox(), getBox()) ||
+						AABB.inside(getBox(), orb.getBox().center))){
+				switch(String.valueOf(orb.getIsLargeOrb())+orb.getIsVisible()){
+						case "truetrue"		:	this.setSpeedMod(FAST);
+												for(int j = 1; j < 5; j++)
+													((Ghost) entities.get(j)).setStateOrb();
+												orb.setNotVisible();
+												entities.remove(i);
+												System.out.println("Something large eaten");
+												break;
+						case "falsetrue"	:	this.setSpeedMod(DEFAULT);
+												orb.setNotVisible();
+												entities.remove(i);
+												System.out.println("Something small eaten");
+												break;
+						case "truefalse"	:	this.setSpeedMod(DEFAULT);
+												System.out.println("Something large is invisible");
+												break;
+						case "falsefalse"	:	this.setSpeedMod(DEFAULT);
+												System.out.println("Something large is invisible");
+												break;
+						default				:	this.setSpeedMod(DEFAULT);
+												System.out.println("Error: Default switch hit");
+												break;
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
