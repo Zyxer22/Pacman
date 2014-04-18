@@ -22,6 +22,7 @@ public class Pacman implements Entity{
 	private Vector2Float center;
 	private AABB box;
 	private double speedMod = 1;
+	private int killCount = 0;
 	
 	private static final double FAST = 1.125;
 	private static final double DEFAULT = 1;
@@ -175,6 +176,12 @@ public class Pacman implements Entity{
 	private void setSpeedMod(double speedMod){
 		this.speedMod = speedMod;
 	}
+	public int getKillCount(){
+		return killCount;
+	}
+	public void setKillCount(int kills){
+		this.killCount = kills;
+	}
 	
 	public void updateCurrentAnimation(){
 		if (!wasStateChange){
@@ -266,7 +273,8 @@ public class Pacman implements Entity{
 		updateCenter();
 	}
 	
-	public boolean checkForGhost(List<Entity> entities){
+	public int checkForGhost(List<Entity> entities){
+		int points = 0;
 		for(int i=1; i < 5; i++){
 			Ghost ghost = (Ghost) entities.get(i);
 			if( !this.isDead() && (AABB.collides(ghost.getBox(), getBox()) ||
@@ -276,37 +284,79 @@ public class Pacman implements Entity{
 										 	break;
 						case "running"	:	this.setStateDead();
 						break;
-						case "orb"		:	ghost.setStateEaten();
+						case "orb"		:	this.killCount = (this.killCount + 1)%4;
+											points = (int) (Math.pow(2,killCount)*100);
+											ghost.setStateEaten();
 											this.setSpeedMod(EATING);
+											points += checkForGhost(entities,i+1);
 											break;
-						case "flashing"	:	ghost.setStateEaten();
+						case "flashing"	:	this.killCount = (this.killCount + 1)%4;
+											points = (int) (Math.pow(2,killCount)*100);
+											ghost.setStateEaten();
 											this.setSpeedMod(EATING);
+											points += checkForGhost(entities,i+1);
 											break;
 						case "eaten"	:	break;
 						default			:	this.setStateDead();
 											break;
 				}
-				return true;
+				return points;
 			}
 		}
-		this.setSpeedMod(DEFAULT);
-		return false;
+		return points;
 	}
-	public boolean checkForOrb(List<Entity> entities){
+	public int checkForGhost(List<Entity> entities, int start){
+		int points = 0;
+		for(int i=start; i < 5; i++){
+			Ghost ghost = (Ghost) entities.get(i);
+			if( !this.isDead() && (AABB.collides(ghost.getBox(), getBox()) ||
+						AABB.inside(getBox(), ghost.getBox().center))){
+				switch(ghost.getState()){
+						case "chasing"	:	this.setStateDead();
+										 	break;
+						case "running"	:	this.setStateDead();
+						break;
+						case "orb"		:	this.killCount = (this.killCount + 1)%4;
+											points = (int) (Math.pow(2,killCount)*100);
+											ghost.setStateEaten();
+											this.setSpeedMod(EATING);
+											points += checkForGhost(entities,i+1);
+											break;
+						case "flashing"	:	this.killCount = (this.killCount + 1)%4;
+											points = (int) (Math.pow(2,killCount)*100);
+											ghost.setStateEaten();
+											this.setSpeedMod(EATING);
+											points += checkForGhost(entities,i+1);
+											break;
+						case "eaten"	:	break;
+						default			:	this.setStateDead();
+											break;
+				}
+				return points;
+			}
+		}
+		return points;
+	}
+	public int checkForOrb(List<Entity> entities){
+		int points = 0;
 		for(int i=5; i < entities.size(); i++){
 			Orb orb = (Orb) entities.get(i);
 			//System.out.println(String.valueOf(orb.getIsLargeOrb())+orb.getIsVisible());
 			if( !this.isDead() && (AABB.collides(orb.getBox(), getBox()) ||
 						AABB.inside(getBox(), orb.getBox().center))){
 				switch(String.valueOf(orb.getIsLargeOrb())+orb.getIsVisible()){
-						case "truetrue"		:	this.setSpeedMod(FAST);
+						case "truetrue"		:	points = 50;
+												this.setSpeedMod(FAST);
+												this.killCount = 0;
 												for(int j = 1; j < 5; j++)
-													((Ghost) entities.get(j)).setStateOrb();
+													if(!((Ghost) entities.get(j)).getState().equals("eaten"))
+														((Ghost) entities.get(j)).setStateOrb();
 												orb.setNotVisible();
 												entities.remove(i);
 												System.out.println("Something large eaten");
 												break;
-						case "falsetrue"	:	this.setSpeedMod(DEFAULT);
+						case "falsetrue"	:	points = 10;
+												this.setSpeedMod(DEFAULT);
 												orb.setNotVisible();
 												entities.remove(i);
 												System.out.println("Something small eaten");
@@ -321,10 +371,9 @@ public class Pacman implements Entity{
 												System.out.println("Error: Default switch hit");
 												break;
 				}
-				return true;
 			}
 		}
-		return false;
+		return points;
 	}
 
 	@Override

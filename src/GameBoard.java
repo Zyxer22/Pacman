@@ -16,7 +16,8 @@ public class GameBoard {
 	public static final int tileLength = 20;
 	public static final Vector2Float size = new Vector2Float(280,310);
 	public static final Vector2Float center = new Vector2Float(280,310);
-	public static final AABB absoluteBoundary = new AABB(center,size); 
+	public static final AABB absoluteBoundary = new AABB(center,size);
+	private int score = 0;
 	List<Entity> entities;
 	TiledMap tm;
 	
@@ -60,13 +61,23 @@ public class GameBoard {
 	public void addEntity(Entity entity){
 		entities.add(entity);
 	}
-	
+	public int getScore(){
+		return score;
+	}
+	public void incrementScore(int inc){
+		this.score+=inc;
+	}
 	public void updateEntityPosition(){
-		((Pacman) entities.get(0)).checkForGhost(entities);
-		((Pacman) entities.get(0)).checkForOrb(entities);
+		incrementScore(((Pacman) entities.get(0)).checkForGhost(entities));
+		incrementScore(((Pacman) entities.get(0)).checkForOrb(entities));
 		for (Entity entity : entities){
 			float oldX = entity.getX();
 			float oldY = entity.getY();
+/*			if(entity instanceof Pacman)
+				if(((Pacman)entity).getSpeedMod() < 1)
+					return;
+				else if(((Pacman)entity).getSpeedMod() > 1)
+					entity.move();*/
 			entity.move();
 			if (isBlocked(entity)){
 				entity.setPosition(oldX, oldY);

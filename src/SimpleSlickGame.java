@@ -44,6 +44,10 @@ public class SimpleSlickGame extends BasicGame
 		smallOrb = new Orb(sm.getOrbSprites(), 220, 232f, "small");
 		pkl = new PlayerKeyListener(pm, gm);
 		gc.getInput().addKeyListener(pkl);
+		
+		//entities must be added in this order to maintain collision detection later
+		//this is a result of them being placed in specific places in the array
+		//which allows us to increase performance by only checking relevant spaces for collision
 		gb.addEntity(pm);
 		gb.addEntity(gm.getBlueGhost());
 		gb.addEntity(gm.getRedGhost());
@@ -76,7 +80,7 @@ public class SimpleSlickGame extends BasicGame
 			//playerInput = gc.getInput();
 			pm.updateCurrentAnimation();
 			
-			if (timeBetweenMove >= 75){
+			if (timeBetweenMove >= 60){
 				gb.updateEntityPosition();
 				timeBetweenMove = 0;
 			}
@@ -106,8 +110,10 @@ public class SimpleSlickGame extends BasicGame
 			g.setColor(Color.white);
 			g.setFont(ufont);
 			g.drawString(Integer.toString(gb.getTileId(pm)), pm.getX(), pm.getY() + 10);
+			g.drawString("Score: " + gb.getScore(), 465, 200);
 			
 	}
+
 
 	public static void main(String[] args)
 	{
