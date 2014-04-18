@@ -42,23 +42,23 @@ public class GhostManager {
 		return yellowLogic;
 	}
 	
-	public Ghost[] getGhosts(){
+	public static Ghost[] getGhosts(){
 		return ghosts;
 	}
 	
-	public Ghost getRedGhost(){
+	public static Ghost getRedGhost(){
 		return ghosts[0];
 	}
 	
-	public Ghost getPinkGhost(){
+	public static Ghost getPinkGhost(){
 		return ghosts[1];
 	}
 	
-	public Ghost getBlueGhost(){
+	public static Ghost getBlueGhost(){
 		return ghosts[2];
 	}
 	
-	public Ghost getYellowGhost(){
+	public static Ghost getYellowGhost(){
 		return ghosts[3];
 	}
 	
@@ -67,14 +67,14 @@ public class GhostManager {
 			ghost.drawCurrentAnimation();
 		}
 	}
-	public void setGhostsChasing(){
+	public static void setGhostsChasing(){
 		for (Ghost ghost : ghosts)
 			if(!ghost.getState().equals("eaten"))
 				ghost.setStateChasing();
 		orbTimer = 80000;
 		timerOn = false;
 	}
-	public void setGhostsFlashing(){
+	public static void setGhostsFlashing(){
 		for (Ghost ghost : ghosts)
 			if(!ghost.getState().equals("eaten"))
 				ghost.setStateFlashing();
@@ -85,6 +85,22 @@ public class GhostManager {
 				ghost.setStateOrb();
 		orbTimer = 225;
 		timerOn = true;
+	}
+	public static void resetGhostPositions(){
+		setGhostsChasing();
+		getRedGhost().setX(240);
+		getRedGhost().setY(300);
+		getRedGhost().updateCenter();
+		getPinkGhost().setX(260);
+		getPinkGhost().setY(300);
+		getPinkGhost().updateCenter();
+		getBlueGhost().setX(280);
+		getBlueGhost().setY(300);
+		getBlueGhost().updateCenter();
+		getYellowGhost().setX(300);
+		getYellowGhost().setY(300);
+		getYellowGhost().updateCenter();
+		
 	}
 	public void resetOrbTimer(){
 		this.orbTimer = 0;

@@ -32,7 +32,7 @@ public class Pacman implements Entity{
 		position = new Position(270, 342);
 		this.sprites = sprites;
 		this.size = new Vector2Float(sprites[0].getWidth()/2, sprites[0].getHeight()/2);
-		this.center = new Vector2Float(135,171);
+		this.center = new Vector2Float(270,342);
 		this.box = new AABB(center,size);
 		//create animations
 		
@@ -234,6 +234,7 @@ public class Pacman implements Entity{
 	
 	public void setStateDead(){
 		state = "dead";
+		GameBoard.removeLife();
 		wasStateChange = true;
 		updateCurrentAnimation();
 		System.out.println("Pacman died :'(");

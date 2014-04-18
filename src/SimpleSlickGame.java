@@ -67,38 +67,47 @@ public class SimpleSlickGame extends BasicGame
 		ufont.getEffects().add(new ColorEffect(java.awt.Color.WHITE));
 		ufont.loadGlyphs();
 	}
+	
+	private boolean recoverFromDeath(){
+		if(pm.isDead() && GameBoard.getLives() > 0){
+			pm.setStateMoving();
+			pm.setX(270);
+			pm.setY(342);
+			pm.updateCenter();
+			pm.setDirectionLeft();
+			GhostManager.resetGhostPositions();
+			return true;
+		}
+		return false;
+	}
 
 	@Override
 	public void update(GameContainer gc, int i) throws SlickException {
 		//get player input
 		if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE))
 				gc.exit();
-		else if (gc.getInput().isKeyPressed(Input.KEY_P) || pm.isDead())
+		else if (gc.getInput().isKeyPressed(Input.KEY_P))
 		    gc.setPaused(!gc.isPaused());
-		else if(!gc.isPaused()){
+		else if(!gc.isPaused()){			
 			timeBetweenMove += i;
 			pm.updateCurrentAnimation();
 			
 			if (timeBetweenMove >= 60){
 				gm.decrementOrbTimer();
 				if(gm.getOrbTimer() <= 0)
-					gm.setGhostsChasing();
+					GhostManager.setGhostsChasing();
 				else if(gm.getOrbTimer() < 90)
-					gm.setGhostsFlashing();
+					GhostManager.setGhostsFlashing();
 				gb.updateEntityPosition();
 				timeBetweenMove = 0;
+				recoverFromDeath();
 			}
-		}
-		
-		
+		}	
 	}
 
 	@Override
 	public void render(GameContainer gc, Graphics g) throws SlickException
-	{
-		
-		
-		
+	{	
 		
 		//gb.renderBackground();
 		  
@@ -115,6 +124,10 @@ public class SimpleSlickGame extends BasicGame
 			g.setFont(ufont);
 			g.drawString(Integer.toString(gb.getTileId(pm)), pm.getX(), pm.getY() + 10);
 			g.drawString("Score: " + gb.getScore(), 465, 200);
+			g.drawString("Lives: ", 465, 221);
+			for(int i = 0; i < GameBoard.getLives(); i++)
+				sm.getPacmanSprites()[4].draw(505+12*i,222);
+			g.drawString("Lamp", 260, 280);
 			
 	}
 

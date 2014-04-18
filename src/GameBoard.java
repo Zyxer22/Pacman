@@ -18,6 +18,7 @@ public class GameBoard {
 	public static final Vector2Float center = new Vector2Float(280,310);
 	public static final AABB absoluteBoundary = new AABB(center,size);
 	private int score = 0;
+	private static int lives = 3;
 	List<Entity> entities;
 	TiledMap tm;
 	
@@ -66,6 +67,15 @@ public class GameBoard {
 	}
 	public void incrementScore(int inc){
 		this.score+=inc;
+	}
+	public static int getLives(){
+		return lives;
+	}
+	public static void removeLife(){
+		lives--;
+	}
+	public static void addLife(){
+		lives++;
 	}
 	public void updateEntityPosition(){
 		incrementScore(((Pacman) entities.get(0)).checkForGhost(entities));
