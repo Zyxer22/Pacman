@@ -137,12 +137,15 @@ public class GhostManager {
 					Thread.sleep(red.putToSleep(11));
 					red.wake();
 					while(true){
-						try {
-							red.getCondition().wait();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						choosePath(red);
+						synchronized(red.getCondition()){
+							try {
+								red.getCondition().wait();
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							}
 					}
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
@@ -160,11 +163,13 @@ public class GhostManager {
 					pink.wake();
 					while(true){
 						choosePath(pink);
-						try {
-							pink.getCondition().wait();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						synchronized(pink.getCondition()){
+							try {
+								pink.getCondition().wait();
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 				} catch (InterruptedException e) {
@@ -183,11 +188,13 @@ public class GhostManager {
 					blue.wake();
 					while(true){
 						choosePath(blue);
-						try {
-							blue.getCondition().wait();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						synchronized(blue.getCondition()){
+							try {
+								blue.getCondition().wait();
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 				} catch (InterruptedException e) {
@@ -205,11 +212,14 @@ public class GhostManager {
 					Thread.sleep(yellow.putToSleep(37));
 					yellow.wake();
 					while(true){
-						try {
-							yellow.getCondition().wait();
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						choosePath(yellow);
+						synchronized(yellow.getCondition()){
+							try {
+								yellow.getCondition().wait();
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
 						}
 					}
 				} catch (InterruptedException e) {

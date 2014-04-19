@@ -99,7 +99,9 @@ public class GameBoard {
 				Ghost ghost = (Ghost)entity;
 				if (ghost.getPathReady().get() == true ){
 					ghost.move();
-					ghost.getCondition().notify();
+					synchronized(ghost.getCondition()){
+						ghost.getCondition().notify();
+					}
 				}
 				
 			}
