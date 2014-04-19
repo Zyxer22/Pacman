@@ -1,3 +1,7 @@
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
+
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.Image;
 
@@ -25,6 +29,10 @@ public class Ghost implements Entity{
 	private AABB box;
 	private Vector2Float size;
 	private Vector2Float center;
+	private static final double GHOST_INFLUENCE_VALUE = 0.001;
+	private AtomicBoolean pathReady = new AtomicBoolean(false);
+	private ReentrantLock lock = new ReentrantLock();
+	private Condition condition = lock.newCondition();
 	
 	public Ghost(Image[] sprites, String type, float x, float y, String state){
 		position = new Position(x, y);
@@ -297,6 +305,11 @@ public class Ghost implements Entity{
 			setY(curY);
 		}
 		updateCenter();
+		int y = (int) (getX()/20);
+		int x = (int) (getY()/20);
+		InfluenceMap.getInfluenceMap()[x][y] = GHOST_INFLUENCE_VALUE;
+		
+		
 	}
 
 	@Override
@@ -315,6 +328,18 @@ public class Ghost implements Entity{
 	
 	public void calculatePath(){
 		
+	}
+	
+	public AtomicBoolean getPathReady(){
+		return pathReady;
+	}
+	
+	public ReentrantLock getLock(){
+		return lock;
+	}
+	
+	public Condition getCondition(){
+		return condition;
 	}
 	
 }

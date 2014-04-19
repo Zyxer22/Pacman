@@ -27,6 +27,7 @@ public class Pacman implements Entity{
 	private static final double FAST = 1.125;
 	private static final double DEFAULT = 1;
 	private static final double EATING = 0.8875;
+	private static final double INFLUENCE_VALUE = 3140000;
 	
 	public Pacman(Image[] sprites){
 		position = new Position(272, 465);
@@ -271,6 +272,9 @@ public class Pacman implements Entity{
 				setY(curY);
 			}
 		}
+		int y = (int) (getX()/20);
+		int x = (int) (getY()/20);
+		InfluenceMap.getInfluenceMap()[x][y] = Pacman.INFLUENCE_VALUE;
 		updateCenter();
 	}
 	

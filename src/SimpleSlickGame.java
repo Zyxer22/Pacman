@@ -46,11 +46,7 @@ public class SimpleSlickGame extends BasicGame
 	smallOrb203,smallOrb204,smallOrb205,smallOrb206,smallOrb207,smallOrb208,smallOrb209,smallOrb210,smallOrb211,smallOrb212,
 	smallOrb213,smallOrb214,smallOrb215,smallOrb216,smallOrb217,smallOrb218,smallOrb219,smallOrb220,smallOrb221,smallOrb222,
 	smallOrb223,smallOrb224,smallOrb225,smallOrb226,smallOrb227,smallOrb228,smallOrb229,smallOrb230,smallOrb231,smallOrb232,
-	smallOrb233,smallOrb234,smallOrb235,smallOrb236,smallOrb237,smallOrb238,smallOrb239,smallOrb240,smallOrb241,smallOrb242,
-	smallOrb243,smallOrb244,smallOrb245,smallOrb246,smallOrb247,smallOrb248,smallOrb249,smallOrb250,smallOrb251,smallOrb252,
-	smallOrb253,smallOrb254,smallOrb255,smallOrb256,smallOrb257,smallOrb258,smallOrb259,smallOrb260,smallOrb261,smallOrb262,
-	smallOrb263,smallOrb264,smallOrb265,smallOrb266,smallOrb267,smallOrb268,smallOrb269,smallOrb270,smallOrb271,smallOrb272,
-	smallOrb273,smallOrb274,smallOrb275,smallOrb276,smallOrb277,smallOrb278,smallOrb279,smallOrb280,smallOrb281,smallOrb282,smallOrb283;
+	smallOrb233,smallOrb234,smallOrb235,smallOrb236,smallOrb237,smallOrb238,smallOrb239,smallOrb240,smallOrb241,smallOrb242;
 	int timeBetweenMove = 0;
 	UnicodeFont ufont;
 	Font font;
@@ -115,6 +111,7 @@ public class SimpleSlickGame extends BasicGame
 			pm.updateCenter();
 			pm.setDirectionLeft();
 			GhostManager.resetGhostPositions();
+			InfluenceMap.resetInfluence();
 			return true;
 		}
 		return false;
@@ -131,7 +128,7 @@ public class SimpleSlickGame extends BasicGame
 			timeBetweenMove += i;
 			pm.updateCurrentAnimation();
 			
-			if (timeBetweenMove >= 60){
+			if (timeBetweenMove > 60 && !(pm.isDead()) ){
 				gm.decrementOrbTimer();
 				if(gm.getOrbTimer() <= 0)
 					GhostManager.setGhostsChasing();
@@ -139,8 +136,10 @@ public class SimpleSlickGame extends BasicGame
 					GhostManager.setGhostsFlashing();
 				gb.updateEntityPosition();
 				timeBetweenMove = 0;
-				recoverFromDeath();
+				//InfluenceMap.propagateInfluence();
 			}
+			else if(timeBetweenMove > 1380)
+				recoverFromDeath();
 		}	
 	}
 
@@ -166,15 +165,11 @@ public class SimpleSlickGame extends BasicGame
 			for(int i = 0; i < GameBoard.getLives(); i++)
 				sm.getPacmanSprites()[4].draw(505+12*i,222);
 			g.drawString("Lamp", 260, 280);
-			int qual = 0;
-/*			for(int i = 0; i < 620; i+=20){
+			for(int i = 0; i < 620; i+=20){
 				for(int j = 0; j<560;j+=20){
-					g.drawString((""+InfluenceMap.influenceMap[i/20][j/20]),10+j,5+i);
-					qual += InfluenceMap.influenceMap[i/20][j/20];
+					g.drawString((""+(int)InfluenceMap.getInfluenceMap()[i/20][j/20]),10+j,5+i);
 				}
-			}*/
-			System.out.println("Number of entities: "+qual);
-			
+			}			
 	}
 
 

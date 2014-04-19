@@ -1,3 +1,5 @@
+import java.util.concurrent.atomic.AtomicBoolean;
+
 
 public class GhostManager {
 	static Ghost[] ghosts;
@@ -11,8 +13,8 @@ public class GhostManager {
 	
 	public void initializeGhosts(SpriteManager sm){
 		float x, y;
-		x = 240;
-		y = 300;
+		x = 250;
+		y = 310;
 		ghosts[0] = new Ghost(sm.getRedGhostSprites(), "red", x, y, "chasing");
 		x += GameBoard.tileLength;
 		ghosts[1] = new Ghost(sm.getPinkGhostSprites(), "pink", x, y, "chasing");
@@ -132,8 +134,16 @@ public class GhostManager {
 	        Ghost red = getRedGhost();
 	        if(red.isAsleep())
 				try {
-					Thread.sleep(red.putToSleep(1));
+					Thread.sleep(red.putToSleep(11));
 					red.wake();
+					while(true){
+						try {
+							red.getCondition().wait();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -146,8 +156,17 @@ public class GhostManager {
 	        Ghost pink = getPinkGhost();
 	        if(pink.isAsleep())
 				try {
-					Thread.sleep(pink.putToSleep(12));
+					Thread.sleep(pink.putToSleep(0));
 					pink.wake();
+					while(true){
+						choosePath(pink);
+						try {
+							pink.getCondition().wait();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -162,6 +181,15 @@ public class GhostManager {
 				try {
 					Thread.sleep(blue.putToSleep(23));
 					blue.wake();
+					while(true){
+						choosePath(blue);
+						try {
+							blue.getCondition().wait();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -176,6 +204,14 @@ public class GhostManager {
 				try {
 					Thread.sleep(yellow.putToSleep(37));
 					yellow.wake();
+					while(true){
+						try {
+							yellow.getCondition().wait();
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -191,6 +227,37 @@ public class GhostManager {
  *													*
  *==================================================*/
 	
+	public void choosePath(Ghost ghost){
+		//get current position
+		int y = (int) (ghost.getX()/20);
+		int x = (int) (ghost.getY()/20);
+		
+		//get the direction influences
+		double left = InfluenceMap.getInfluenceMap()[x-1][y];
+		double right = InfluenceMap.getInfluenceMap()[x+1][y];
+		double up = InfluenceMap.getInfluenceMap()[x][y-1];
+		double down = InfluenceMap.getInfluenceMap()[x][y+1];
+		
+		//get highest weight with bias towards up,right,left,down
+		if( up >= right &&
+			up >= left &&
+			up >= down)
+				ghost.setDirectionUp();
+		else if( right >= left &&
+				 right >= up &&
+				 right >= down)
+					ghost.setDirectionDown();
+		else if( left >= right &&
+				 left >= up &&
+				 left >= down)
+					ghost.setDirectionLeft();
+		else if( down >= right &&
+				 down >= left &&
+				 down >= up)
+					ghost.setDirectionDown();
+		
+			ghost.getPathReady().set(true);
+		}
 	
 
 	

@@ -88,10 +88,22 @@ public class GameBoard {
 					return;
 				else if(((Pacman)entity).getSpeedMod() > 1)
 					entity.move();*/
-			entity.move();
-			if (isBlocked(entity)){
-				entity.setPosition(oldX, oldY);
-			}		
+			
+			if (entity.getClass().getName().equals("Pacman")){
+				entity.move();
+				if (isBlocked(entity)){
+					entity.setPosition(oldX, oldY);
+				}		
+			}
+			else if (entity.getClass().getName().equals("Ghost")){
+				Ghost ghost = (Ghost)entity;
+				if (ghost.getPathReady().get() == true ){
+					ghost.move();
+					ghost.getCondition().notify();
+				}
+				
+			}
+			
 		}
 	}
 	
