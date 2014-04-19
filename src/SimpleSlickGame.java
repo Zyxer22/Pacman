@@ -136,7 +136,7 @@ public class SimpleSlickGame extends BasicGame
 					GhostManager.setGhostsFlashing();
 				gb.updateEntityPosition();
 				timeBetweenMove = 0;
-				//InfluenceMap.propagateInfluence();
+				InfluenceMap.propagateInfluence();
 			}
 			else if(timeBetweenMove > 1380)
 				recoverFromDeath();
@@ -165,8 +165,8 @@ public class SimpleSlickGame extends BasicGame
 			for(int i = 0; i < GameBoard.getLives(); i++)
 				sm.getPacmanSprites()[4].draw(505+12*i,222);
 			g.drawString("Lamp", 260, 280);
-			for(int i = 0; i < 620; i+=20){
-				for(int j = 0; j<560;j+=20){
+			for(int i = 0; i < 560; i+=20){
+				for(int j = 0; j<620;j+=20){
 					g.drawString((""+(int)InfluenceMap.getInfluenceMap()[i/20][j/20]),10+j,5+i);
 				}
 			}			

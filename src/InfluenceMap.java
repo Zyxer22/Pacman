@@ -66,11 +66,15 @@ public class InfluenceMap {
 		else return 1;
 	}
 	public static void propagateInfluence(){
-		double bufferMap[][] = new double[28][32];
-			for(int i = 1; i < influenceMap.length-1; i++){
-				for(int j = 1; j < influenceMap[i].length-1; i++){
+		double bufferMap[][] = new double[28][31];
+		
+			for(int i = 1; i < 26; i++){
+				for(int j = 1; j < influenceMap[i].length-2; j++){
 					bufferMap[i][j] = averageIt(i,j);
 				}
 		}
+			
+		influenceMap = bufferMap;
+		
 	}
 }
