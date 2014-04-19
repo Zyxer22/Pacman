@@ -29,10 +29,10 @@ public class Pacman implements Entity{
 	private static final double EATING = 0.8875;
 	
 	public Pacman(Image[] sprites){
-		position = new Position(270, 342);
+		position = new Position(272, 465);
 		this.sprites = sprites;
 		this.size = new Vector2Float(sprites[0].getWidth()/2, sprites[0].getHeight()/2);
-		this.center = new Vector2Float(270,342);
+		this.center = new Vector2Float(272,465);
 		this.box = new AABB(center,size);
 		//create animations
 		
