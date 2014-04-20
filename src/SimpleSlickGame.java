@@ -22,6 +22,7 @@ public class SimpleSlickGame extends BasicGame
 	Input playerInput;
 	PlayerKeyListener pkl;
 	GhostManager gm;
+	InfluenceMapLocksmith iml;
 	Orb largeOrb1, largeOrb2,largeOrb3,largeOrb4;
 	Orb smallOrb1,smallOrb2,smallOrb3,smallOrb4,smallOrb5,smallOrb6,smallOrb7,smallOrb8,smallOrb9,smallOrb10,smallOrb11,smallOrb12,
 	smallOrb13,smallOrb14,smallOrb15,smallOrb16,smallOrb17,smallOrb18,smallOrb19,smallOrb20,smallOrb21,smallOrb22,
@@ -59,9 +60,10 @@ public class SimpleSlickGame extends BasicGame
 	@Override
 	public void init(GameContainer gc) throws SlickException {
 		sm = new SpriteManager();
-		gb = new GameBoard();
 		pm = new Pacman(sm.getPacmanSprites());
-		gm = new GhostManager();
+		iml = new InfluenceMapLocksmith(pm);
+		gb = new GameBoard(iml);
+		gm = new GhostManager(iml);
 		gm.initializeGhosts(sm);
 		
 		pkl = new PlayerKeyListener(pm, gm);
@@ -136,7 +138,7 @@ public class SimpleSlickGame extends BasicGame
 					GhostManager.setGhostsFlashing();
 				gb.updateEntityPosition();
 				timeBetweenMove = 0;
-				InfluenceMap.propagateInfluence();
+				iml.propagateInfluence();
 			}
 			else if(timeBetweenMove > 1380)
 				recoverFromDeath();
@@ -159,17 +161,20 @@ public class SimpleSlickGame extends BasicGame
 			//g.fillRect(0, 0, 640, 480);
 			g.setColor(Color.white);
 			g.setFont(ufont);
-			g.drawString(Integer.toString(gb.getTileId(pm)), pm.getX(), pm.getY() + 10);
+			int row = gb.getTileId(pm)/57;
+			int column = gb.getTileId(pm) % 57;
+			
+			g.drawString(pm.getX() + ", " + pm.getY(), pm.getX(), pm.getY() + 10);
 			g.drawString("Score: " + gb.getScore(), 465, 200);
 			g.drawString("Lives: ", 465, 221);
 			for(int i = 0; i < GameBoard.getLives(); i++)
 				sm.getPacmanSprites()[4].draw(505+12*i,222);
 			g.drawString("Lamp", 260, 280);
-			for(int i = 0; i < 560; i+=20){
-				for(int j = 0; j<620;j+=20){
-					g.drawString((""+(int)InfluenceMap.getInfluenceMap()[i/20][j/20]),10+j,5+i);
+			/*for(int i = 0; i < 620; i+=20){
+				for(int j = 0; j<560;j+=20){
+					g.drawString((""+(int)iml.getInfluenceMap()[i/20][j/20]),10+j,5+i);
 				}
-			}			
+			}*/			
 	}
 
 

@@ -33,6 +33,9 @@ public class Ghost implements Entity{
 	private AtomicBoolean pathReady = new AtomicBoolean(false);
 	private ReentrantLock lock = new ReentrantLock();
 	private Condition condition = lock.newCondition();
+	private String lastDirection;
+	private boolean blocked = false;
+	public AtomicBoolean doReset = new AtomicBoolean(true);
 	
 	public Ghost(Image[] sprites, String type, float x, float y, String state){
 		position = new Position(x, y);
@@ -96,6 +99,7 @@ public class Ghost implements Entity{
 		currentAnimation = upAnimation;
 		startCurrentAnimation();
 		direction = "up";
+		lastDirection = direction;
 		
 	}
 	
@@ -173,6 +177,11 @@ public class Ghost implements Entity{
 	
 	public void setDirectionRight(){
 		direction = "right";
+		updateCurrentAnimation();
+	}
+	
+	public void setDirection(String direction){
+		this.direction = direction;
 		updateCurrentAnimation();
 	}
 	
@@ -304,10 +313,12 @@ public class Ghost implements Entity{
 			curY += GameBoard.tileLength/4;
 			setY(curY);
 		}
+		
+		//lastDirection = getDirection();
 		updateCenter();
 		int y = (int) (getX()/20);
 		int x = (int) (getY()/20);
-		InfluenceMap.getInfluenceMap()[x][y] = GHOST_INFLUENCE_VALUE;
+		//InfluenceMap.getInfluenceMap()[x][y] = GHOST_INFLUENCE_VALUE;
 		
 		
 	}
@@ -342,4 +353,40 @@ public class Ghost implements Entity{
 		return condition;
 	}
 	
+	public void await(){
+		try {
+			condition.await();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void lock(){
+		lock.lock();
+	}
+	
+	public void signal(){
+		condition.signal();
+	}
+	
+	public void unlock(){
+		lock.unlock();
+	}
+	
+	public String getLastDirection(){
+		return lastDirection;
+	}
+	
+	public boolean isBlocked(){
+		return blocked;
+	}
+	
+	public void setIsBlocked(boolean value){
+		blocked = value;
+	}
+	
+	public void setLastDirection(String direction){
+		lastDirection = direction;
+	}
 }

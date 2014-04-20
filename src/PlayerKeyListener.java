@@ -43,7 +43,6 @@ public class PlayerKeyListener implements KeyListener {
 	@Override
 	public void keyPressed(int key, char c) {
 		// TODO Auto-generated method stub
-		System.out.println("Key pressed!");
 		if (key == Input.KEY_DOWN){
 			pacman.setDirectionDown();
 		}

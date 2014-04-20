@@ -27,10 +27,10 @@ public class Pacman implements Entity{
 	private static final double FAST = 1.125;
 	private static final double DEFAULT = 1;
 	private static final double EATING = 0.8875;
-	private static final double INFLUENCE_VALUE = 3140000;
+	public static final float INFLUENCE_VALUE = 1000000000;
 	
 	public Pacman(Image[] sprites){
-		position = new Position(272, 465);
+		position = new Position(272, 466);
 		this.sprites = sprites;
 		this.size = new Vector2Float(sprites[0].getWidth()/2, sprites[0].getHeight()/2);
 		this.center = new Vector2Float(272,465);
@@ -274,7 +274,7 @@ public class Pacman implements Entity{
 		}
 		int y = (int) (getX()/20);
 		int x = (int) (getY()/20);
-		InfluenceMap.getInfluenceMap()[x][y] = Pacman.INFLUENCE_VALUE;
+		
 		updateCenter();
 	}
 	
@@ -356,22 +356,22 @@ public class Pacman implements Entity{
 												GhostManager.setGhostsOrb();
 												orb.setNotVisible();
 												entities.remove(i);
-												System.out.println("Something large eaten");
+												//System.out.println("Something large eaten");
 												break;
 						case "falsetrue"	:	points = 10;
 												this.setSpeedMod(DEFAULT);
 												orb.setNotVisible();
 												entities.remove(i);
-												System.out.println("Something small eaten");
+												//System.out.println("Something small eaten");
 												break;
 						case "truefalse"	:	this.setSpeedMod(DEFAULT);
-												System.out.println("Something large is invisible");
+												//System.out.println("Something large is invisible");
 												break;
 						case "falsefalse"	:	this.setSpeedMod(DEFAULT);
-												System.out.println("Something large is invisible");
+												//System.out.println("Something large is invisible");
 												break;
 						default				:	this.setSpeedMod(DEFAULT);
-												System.out.println("Error: Default switch hit");
+												//System.out.println("Error: Default switch hit");
 												break;
 				}
 			}

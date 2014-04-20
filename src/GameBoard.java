@@ -21,13 +21,14 @@ public class GameBoard {
 	private static int lives = 3;
 	List<Entity> entities;
 	TiledMap tm;
+	InfluenceMapLocksmith influenceMapLocksmith;
 	
 	public static final String tileMapPath = "/BoardTileMap.tmx";
 	public static final String spritePath = "/background.png";
 	
 	private Image bg;
 	
-	public GameBoard(){
+	public GameBoard(InfluenceMapLocksmith iml){
 		try {
 			bg = new Image(spritePath);
 			tm = new TiledMap(tileMapPath);
@@ -45,6 +46,7 @@ public class GameBoard {
 			e.printStackTrace();
 		}
 		entities = new ArrayList<Entity>();
+		this.influenceMapLocksmith = iml;
 	}
 	
 	public Image getBG(){
@@ -98,10 +100,20 @@ public class GameBoard {
 			else if (entity.getClass().getName().equals("Ghost")){
 				Ghost ghost = (Ghost)entity;
 				if (ghost.getPathReady().get() == true ){
+					
 					ghost.move();
-					synchronized(ghost.getCondition()){
-						ghost.getCondition().notify();
-					}
+					if (isBlocked(entity)){
+						entity.setPosition(oldX, oldY);
+					}	
+					//synchronized(ghost.getCondition()){
+						//System.out.println(ghost.getType() + " waking up...");
+						ghost.getPathReady().set(false);
+						ghost.lock();
+						ghost.signal();
+						ghost.unlock();
+						//ghost.getCondition().signal();
+						
+					//}
 				}
 				
 			}
@@ -131,12 +143,20 @@ public class GameBoard {
 			
 			if ((entX >= objX - tileLength + tileOffset) && (entX <= (objX + objWidth))){
 				if ((entY >= objY - tileLength + tileOffset) && (entY <= (objY + objHeight))){
+					if (entity.getClass().getName().equals("Ghost")){
+						Ghost ghost = (Ghost)entity;
+						ghost.setIsBlocked(true);
+					}
 					return true;
 				}
 				
 			}
 			else if ((entY >= objY - tileLength + tileOffset) && (entY <= (objY + objHeight))){
 				if ((entX >= objX - tileLength + tileOffset) && (entX <= (objX + objWidth))){
+					if (entity.getClass().getName().equals("Ghost")){
+						Ghost ghost = (Ghost)entity;
+						ghost.setIsBlocked(true);
+					}
 					return true;
 				}
 			}
@@ -146,6 +166,10 @@ public class GameBoard {
 			return pacmanGateCheck((Pacman)entity);
 		}
 		
+		if (entity.getClass().getName().equals("Ghost")){
+			Ghost ghost = (Ghost)entity;
+			ghost.setIsBlocked(false);
+		}
 		return false;
 	}
 	
@@ -161,14 +185,14 @@ public class GameBoard {
 		
 		if ((entX >= gateX - tileLength + tileOffset) && (entX <= (gateX + gateWidth))){
 			if ((entY >= gateY - tileLength + tileOffset) && (entY <= (gateY + gateHeight))){
-				System.out.println("detected collision");
+				//System.out.println("detected collision");
 				return true;
 			}
 			
 		}
 		else if ((entY >= gateY - tileLength + tileOffset) && (entY <= (gateY + gateHeight))){
 			if ((entX >= gateX - tileLength + tileOffset) && (entX <= (gateX + gateWidth))){
-				System.out.println("detected collision");
+				//System.out.println("detected collision");
 				return true;
 			}
 		}
