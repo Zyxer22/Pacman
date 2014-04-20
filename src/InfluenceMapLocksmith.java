@@ -6,11 +6,16 @@ import java.util.concurrent.locks.ReentrantLock;
 public class InfluenceMapLocksmith {
 	private Pacman pm;
 	private float lastPacmanX, lastPacmanY;
+	private Ghost[] ghosts;
 	
 	InfluenceMapLocksmith(Pacman pm){
 		this.pm = pm;
 		lastPacmanX = lastPacmanY = -1.0f;
 	}	
+	
+	public void addGhosts(Ghost[] ghosts){
+		this.ghosts = ghosts;
+	}
 
 	public float[][] getInfluenceMap(){
 		return InfluenceMap.getInfluenceMap();
@@ -30,6 +35,9 @@ public class InfluenceMapLocksmith {
 		lastPacmanY = pmY;
 		
 		InfluenceMap.getInfluenceMap()[(int)pm.getY()/20][(int)pm.getX()/20] = Pacman.INFLUENCE_VALUE;
+		for (Ghost ghost : ghosts){
+			InfluenceMap.getInfluenceMap()[(int)ghost.getY()/20][(int)ghost.getX()/20] = Ghost.GHOST_INFLUENCE_VALUE;
+		}
 		
 		//System.out.println("Writing new influence map");
 		float[][] influenceCopy = new float[31][28];

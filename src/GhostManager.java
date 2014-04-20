@@ -10,6 +10,7 @@ public class GhostManager {
 	public GhostManager(InfluenceMapLocksmith influenceMapLocksmith){
 		ghosts = new Ghost[4];
 		this.influenceMapLocksmith = influenceMapLocksmith;
+		influenceMapLocksmith.addGhosts(ghosts);
 		
 	}
 	
@@ -89,27 +90,33 @@ public class GhostManager {
 		timerOn = true;
 	}
 	public static void resetGhostPositions(){
-		setGhostsChasing();
-		getRedGhost().setX(260);
-		getRedGhost().setY(390);
-		getRedGhost().setIsBlocked(false);
-		getRedGhost().updateCenter();
-		getPinkGhost().setX(260);
-		getPinkGhost().setY(310);
-		getPinkGhost().updateCenter();
-		getPinkGhost().setIsBlocked(false);
-		getBlueGhost().setX(280);
-		getBlueGhost().setY(310);
-		getBlueGhost().setIsBlocked(false);
-		getBlueGhost().updateCenter();
-		getYellowGhost().setX(280);
-		getYellowGhost().setY(390);
-		getYellowGhost().setIsBlocked(false);
-		getYellowGhost().updateCenter();
 		getRedGhost().doReset.set(true);
 		getBlueGhost().doReset.set(true);
 		getYellowGhost().doReset.set(true);
 		getPinkGhost().doReset.set(true);
+		getBlueGhost().setIsBlocked(false);
+		getRedGhost().setIsBlocked(false);
+		getPinkGhost().setIsBlocked(false);
+		getYellowGhost().setIsBlocked(false);
+		
+		setGhostsChasing();
+		getRedGhost().setX(260);
+		getRedGhost().setY(290);
+		
+		getRedGhost().updateCenter();
+		getPinkGhost().setX(260);
+		getPinkGhost().setY(310);
+		getPinkGhost().updateCenter();
+		
+		getBlueGhost().setX(280);
+		getBlueGhost().setY(310);
+		
+		getBlueGhost().updateCenter();
+		getYellowGhost().setX(280);
+		getYellowGhost().setY(290);
+		
+		getYellowGhost().updateCenter();
+		
 		
 	}
 	public void resetOrbTimer(){
@@ -426,64 +433,8 @@ public class GhostManager {
  *==================================================*/
 	
 	public void choosePath(Ghost ghost){
-		//get current position
-		int y = (int) (ghost.getX()/20);
-		int x = (int) (ghost.getY()/20);
 		
-		//System.out.println("Choosing path for ghost " + ghost.getType());
-		//get the direction influences
-		
-		
-		float left = influenceMapLocksmith.getInfluenceMap()[x][y - 1];
-		float right = influenceMapLocksmith.getInfluenceMap()[x][y + 1];
-		float up = influenceMapLocksmith.getInfluenceMap()[x - 1][y];
-		float down = influenceMapLocksmith.getInfluenceMap()[x + 1][y];
-		
-		//get highest weight with bias towards up,right,left,down
-		if( up >= right &&
-			up >= left &&
-			up >= down){
-				if (!ghost.getDirection().equals("up")){
-					ghost.setLastDirection(ghost.getDirection());
-					System.out.println("Setting last direction " + ghost.getLastDirection());
-				}
-				ghost.setDirectionUp();
-				
-		}
-		else if( right >= left &&
-				 right >= up &&
-				 right >= down){
-				if (!ghost.getDirection().equals("right")){
-					
-					ghost.setLastDirection(ghost.getDirection());
-					System.out.println("Setting last direction " + ghost.getLastDirection());
-				}
-					ghost.setDirectionRight();
-		}
-		else if( left >= right &&
-				 left >= up &&
-				 left >= down){
-					//System.out.println("left = " + left + "(x, y) = (" + x + ", " + y + ")");
-				if (!ghost.getDirection().equals("left")){
-					ghost.setLastDirection(ghost.getDirection());
-					System.out.println("Setting last direction " + ghost.getLastDirection());
-				}
-					ghost.setDirectionLeft();
-		}
-		else if( down >= right &&
-				 down >= left &&
-				 down >= up){
-				if (!ghost.getDirection().equals("down")){
-					ghost.setLastDirection(ghost.getDirection());
-					System.out.println("Setting last direction " + ghost.getLastDirection());
-				}
-					ghost.setDirectionDown();
-		}
-		
-			//ghost.getPathReady().set(true);
-			//System.out.println(ghost.getType() + " pathReady True");
-			
-		}
+	}
 	
 
 	

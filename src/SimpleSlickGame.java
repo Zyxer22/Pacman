@@ -170,11 +170,11 @@ public class SimpleSlickGame extends BasicGame
 			for(int i = 0; i < GameBoard.getLives(); i++)
 				sm.getPacmanSprites()[4].draw(505+12*i,222);
 			g.drawString("Lamp", 260, 280);
-			/*for(int i = 0; i < 620; i+=20){
+			for(int i = 0; i < 620; i+=20){
 				for(int j = 0; j<560;j+=20){
 					g.drawString((""+(int)iml.getInfluenceMap()[i/20][j/20]),10+j,5+i);
 				}
-			}	*/	
+			}	
 	}
 
 

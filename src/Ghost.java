@@ -29,7 +29,7 @@ public class Ghost implements Entity{
 	private AABB box;
 	private Vector2Float size;
 	private Vector2Float center;
-	private static final double GHOST_INFLUENCE_VALUE = 0.001;
+	public static final float GHOST_INFLUENCE_VALUE = 0.001f;
 	private AtomicBoolean pathReady = new AtomicBoolean(false);
 	private ReentrantLock lock = new ReentrantLock();
 	private Condition condition = lock.newCondition();
