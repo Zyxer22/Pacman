@@ -43,17 +43,18 @@ public class PlayerKeyListener implements KeyListener {
 	@Override
 	public void keyPressed(int key, char c) {
 		// TODO Auto-generated method stub
+		System.out.println("Key pressed!");
 		if (key == Input.KEY_DOWN){
-			pacman.setDirectionDown();
+			pacman.setNextState("down");
 		}
 		else if (key == Input.KEY_UP){
-			pacman.setDirectionUp();
+			pacman.setNextState("up");
 		}
 		else if (key == Input.KEY_LEFT){
-			pacman.setDirectionLeft();
+			pacman.setNextState("left");
 		}
 		else if (key == Input.KEY_RIGHT){
-			pacman.setDirectionRight();
+			pacman.setNextState("right");
 		}
 		else if (key == Input.KEY_K){
 			pacman.setStateDead();

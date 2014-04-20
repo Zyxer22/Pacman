@@ -23,6 +23,7 @@ public class Pacman implements Entity{
 	private AABB box;
 	private double speedMod = 1;
 	private int killCount = 0;
+	private String nextState = "left";
 	
 	private static final double FAST = 1.125;
 	private static final double DEFAULT = 1;
@@ -33,7 +34,7 @@ public class Pacman implements Entity{
 		position = new Position(272, 466);
 		this.sprites = sprites;
 		this.size = new Vector2Float(sprites[0].getWidth()/2, sprites[0].getHeight()/2);
-		this.center = new Vector2Float(272,465);
+		this.center = new Vector2Float(272,466);
 		this.box = new AABB(center,size);
 		//create animations
 		
@@ -89,6 +90,12 @@ public class Pacman implements Entity{
 		startCurrentAnimation();
 		
 		
+	}
+	public String getNextState(){
+		return nextState;
+	}
+	public void setNextState(String s){
+		this.nextState = s;
 	}
 	
 	public void setX(float x){
@@ -166,6 +173,10 @@ public class Pacman implements Entity{
 	public void setDirectionRight(){
 		wasStateChange = true;
 		direction = "right";
+	}
+	public void setDirection(String dir){
+		wasStateChange = true;
+		direction = dir;
 	}
 	
 	public String getDirection(){
@@ -250,6 +261,30 @@ public class Pacman implements Entity{
 		}
 	}
 	
+	public void move(String string){
+		float curX, curY;
+		curX = getX();
+		curY = getY();
+		if(!isDead()){
+			if (string.equals("left")){
+				curX -= GameBoard.tileLength/4;
+				setX(curX);
+			}
+			else if (string.equals("right")){
+				curX += GameBoard.tileLength/4;
+				setX(curX);
+			}
+			else if (string.equals("up")){
+				curY -= GameBoard.tileLength/4;
+				setY(curY);
+			}
+			else if (string.equals("down")){
+				curY += GameBoard.tileLength/4;
+				setY(curY);
+			}
+		}
+	}
+	
 	public void move(){
 		float curX, curY;
 		curX = getX();
@@ -271,10 +306,7 @@ public class Pacman implements Entity{
 				curY += GameBoard.tileLength/4;
 				setY(curY);
 			}
-		}
-		int y = (int) (getX()/20);
-		int x = (int) (getY()/20);
-		
+		}		
 		updateCenter();
 	}
 	

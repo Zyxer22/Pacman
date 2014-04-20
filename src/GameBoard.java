@@ -80,16 +80,26 @@ public class GameBoard {
 		lives++;
 	}
 	public void updateEntityPosition(){
-		incrementScore(((Pacman) entities.get(0)).checkForGhost(entities));
-		incrementScore(((Pacman) entities.get(0)).checkForOrb(entities));
+		Pacman pacman = (Pacman) entities.get(0);
+		
+
+		float oldX = pacman.getX();
+		float oldY = pacman.getY();
+		
+		incrementScore(pacman.checkForGhost(entities));
+		incrementScore(pacman.checkForOrb(entities));
+		
+		if(!(pacman.getNextState().equals(pacman.getDirection()))){
+			pacman.move(pacman.getNextState());
+			if(!isBlocked((Pacman) entities.get(0))){
+				pacman.setDirection(pacman.getNextState());
+			}
+		
+			pacman.setPosition(oldX, oldY);
+		}
 		for (Entity entity : entities){
-			float oldX = entity.getX();
-			float oldY = entity.getY();
-/*			if(entity instanceof Pacman)
-				if(((Pacman)entity).getSpeedMod() < 1)
-					return;
-				else if(((Pacman)entity).getSpeedMod() > 1)
-					entity.move();*/
+			oldX = entity.getX();
+			oldY = entity.getY();
 			
 			if (entity.getClass().getName().equals("Pacman")){
 				entity.move();
@@ -105,15 +115,10 @@ public class GameBoard {
 					if (isBlocked(entity)){
 						entity.setPosition(oldX, oldY);
 					}	
-					//synchronized(ghost.getCondition()){
-						//System.out.println(ghost.getType() + " waking up...");
 						ghost.getPathReady().set(false);
 						ghost.lock();
 						ghost.signal();
 						ghost.unlock();
-						//ghost.getCondition().signal();
-						
-					//}
 				}
 				
 			}
