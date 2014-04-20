@@ -165,6 +165,9 @@ public class SimpleSlickGame extends BasicGame
 			int column = gb.getTileId(pm) % 57;
 			
 			g.drawString(pm.getX() + ", " + pm.getY(), pm.getX(), pm.getY() + 10);
+			for(int i = 1; i < 5; i++)
+				g.drawString(gb.entities.get(i).getX() + ", " + gb.entities.get(i).getY(), gb.entities.get(i).getX(), gb.entities.get(i).getY() + 10);
+			g.drawString(pm.getX() + ", " + pm.getY(), pm.getX(), pm.getY() + 10);
 			g.drawString("Score: " + gb.getScore(), 465, 200);
 			g.drawString("Lives: ", 465, 221);
 			for(int i = 0; i < GameBoard.getLives(); i++)

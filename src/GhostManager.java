@@ -544,13 +544,5 @@ public class GhostManager {
 	
 		public  String chooseOrbPath(Ghost ghost, List<String> validStrings){
 			return null;
-			
-			
-			
-	  			
-	  		
 		}
-	}
-	
-
-	
+}
