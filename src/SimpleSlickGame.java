@@ -171,15 +171,15 @@ public class SimpleSlickGame extends BasicGame
 				sm.getPacmanSprites()[4].draw(505+12*i,222);
 			g.drawString("Lamp", 260, 280);
 
-			for(int i = 0; i < 620; i+=20){
 
-/*			for(int i = 0; i < 620; i+=20){
+			/*for(int i = 0; i < 620; i+=20){
 				for(int j = 0; j<560;j+=20){
 					g.drawString((""+(int)iml.getInfluenceMap()[i/20][j/20]),10+j,5+i);
-					if((int)InfluenceMap.getInfluenceMap()[i/20][j/20] > 1)
-						g.fillRect(j, i, 20, 20);
-				}*/
-			}	
+				//	if((int)InfluenceMap.getInfluenceMap()[i/20][j/20] > 1)
+					//	g.fillRect(j, i, 20, 20);
+				}
+			}
+			*/	
 	}
 
 
@@ -196,6 +196,7 @@ public class SimpleSlickGame extends BasicGame
 		}
 		catch (SlickException ex)
 		{
+			System.out.println("AppGC error");
 			Logger.getLogger(SimpleSlickGame.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}

@@ -90,9 +90,13 @@ public class GhostManager {
 		timerOn = true;
 	}
 	public static void resetGhostPositions(){
+		getRedGhost().sleep();
 		getRedGhost().doReset.set(true);
+		getBlueGhost().sleep();
 		getBlueGhost().doReset.set(true);
+		getYellowGhost().sleep();
 		getYellowGhost().doReset.set(true);
+		getPinkGhost().sleep();
 		getPinkGhost().doReset.set(true);
 		getBlueGhost().setIsBlocked(false);
 		getRedGhost().setIsBlocked(false);
@@ -116,6 +120,10 @@ public class GhostManager {
 		getYellowGhost().setY(290);
 		
 		getYellowGhost().updateCenter();
+		getRedGhost().wake();
+		getPinkGhost().wake();
+		getBlueGhost().wake();
+		getYellowGhost().wake();
 		
 		
 	}
@@ -153,6 +161,10 @@ public class GhostManager {
 					red.wake();
 					
 					while(true){
+						while (red.isAsleep()){
+							Thread.sleep(red.putToSleep(0));
+							red.wake();
+						}
 						
 						if (red.doReset.get() == true){
 							if (red.isBlocked()){
@@ -219,10 +231,14 @@ public class GhostManager {
 	        Ghost pink = getPinkGhost();
 	        if(pink.isAsleep())
 				try {
-					Thread.sleep(pink.putToSleep(0));
+					Thread.sleep(pink.putToSleep(10));
 					pink.wake();
 					
 					while(true){
+						while (pink.isAsleep()){
+							Thread.sleep(pink.putToSleep(20));
+							pink.wake();
+						}
 						
 						if (pink.doReset.get() == true){
 							if (pink.isBlocked()){
@@ -289,10 +305,15 @@ public class GhostManager {
 	        Ghost blue = getBlueGhost();
 	        if(blue.isAsleep())
 				try {
-					Thread.sleep(blue.putToSleep(0));
+					Thread.sleep(blue.putToSleep(20));
 					blue.wake();
 					
 					while(true){
+						
+						while (blue.isAsleep()){
+							Thread.sleep(blue.putToSleep(10));
+							blue.wake();
+						}
 						
 						if (blue.doReset.get() == true){
 							if (blue.isBlocked()){
@@ -359,10 +380,14 @@ public class GhostManager {
 	        Ghost yellow = getYellowGhost();
 	        if(yellow.isAsleep())
 				try {
-					Thread.sleep(yellow.putToSleep(0));
+					Thread.sleep(yellow.putToSleep(30));
 					yellow.wake();
 					
 					while(true){
+						while (yellow.isAsleep()){
+							Thread.sleep(yellow.putToSleep(10));
+							yellow.wake();
+						}
 						
 						if (yellow.doReset.get() == true){
 							if (yellow.isBlocked()){
@@ -433,9 +458,65 @@ public class GhostManager {
  *==================================================*/
 	
 	public void choosePath(Ghost ghost){
-		
+		//get current position
+		  		int y = (int) (ghost.getX()/20);
+		  		int x = (int) (ghost.getY()/20);
+		  		
+		  		//System.out.println("Choosing path for ghost " + ghost.getType());
+		  		//get the direction influences
+		  		
+		  		
+		  		float left = influenceMapLocksmith.getInfluenceMap()[x][y -  1];
+		  		float right = influenceMapLocksmith.getInfluenceMap()[x][y + 1];
+		  		float up = influenceMapLocksmith.getInfluenceMap()[x -  1][y];
+		  		float down = influenceMapLocksmith.getInfluenceMap()[x + 1][y];
+		  		
+		  		//get highest weight with bias towards up,right,left,down
+		  		if( up >= right &&
+		  			up >= left &&
+		  			up >= down){
+		  				if (!ghost.getDirection().equals("up")){
+		  					ghost.setLastDirection(ghost.getDirection());
+		  					System.out.println("Setting last direction " + ghost.getLastDirection());
+		  				}
+		  				ghost.setDirectionUp();
+		  				
+		  		}
+		  		else if( right >= left &&
+		  				 right >= up &&
+		  				 right >= down){
+		  				if (!ghost.getDirection().equals("right")){
+		  					
+		  					ghost.setLastDirection(ghost.getDirection());
+		  					System.out.println("Setting last direction " + ghost.getLastDirection());
+		  				}
+		  					ghost.setDirectionRight();
+		  		}
+		  		else if( left >= right &&
+		  				 left >= up &&
+		  				 left >= down){
+		  					//System.out.println("left = " + left + "(x, y) = (" + x + ", " + y + ")");
+		  				if (!ghost.getDirection().equals("left")){
+		  					ghost.setLastDirection(ghost.getDirection());
+		  					System.out.println("Setting last direction " + ghost.getLastDirection());
+		  				}
+		  					ghost.setDirectionLeft();
+		  		}
+		  		else if( down >= right &&
+		  				 down >= left &&
+		  				 down >= up){
+		  				if (!ghost.getDirection().equals("down")){
+		  					ghost.setLastDirection(ghost.getDirection());
+		  					System.out.println("Setting last direction " + ghost.getLastDirection());
+		  				}
+		  					ghost.setDirectionDown();
+		  		}
+		  		
+		  			//ghost.getPathReady().set(true);
+		  			//System.out.println(ghost.getType() + " pathReady True");
+		  			
+		  		}
 	}
 	
 
 	
-}

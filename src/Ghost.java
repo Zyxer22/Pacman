@@ -24,12 +24,12 @@ public class Ghost implements Entity{
 	private String direction;
 	private String type;
 	private String state;
-	private boolean sleeping = true;
+	private AtomicBoolean sleeping = new AtomicBoolean(true);
 	private final long restTimer = 500;
 	private AABB box;
 	private Vector2Float size;
 	private Vector2Float center;
-	public static final float GHOST_INFLUENCE_VALUE = 0.001f;
+	public static final float GHOST_INFLUENCE_VALUE = 0.00001f;
 	private AtomicBoolean pathReady = new AtomicBoolean(false);
 	private ReentrantLock lock = new ReentrantLock();
 	private Condition condition = lock.newCondition();
@@ -283,13 +283,13 @@ public class Ghost implements Entity{
 		return (long) (offset * restTimer);
 	}
 	public void sleep(){
-		sleeping = true;
+		sleeping.set(true);
 	}
 	public boolean isAsleep(){
-		return sleeping;
+		return sleeping.get();
 	}
 	public void wake(){
-		sleeping = false;
+		sleeping.set(false);
 	}
 
 	@Override

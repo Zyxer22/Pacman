@@ -35,6 +35,7 @@ public class InfluenceMapLocksmith {
 		lastPacmanY = pmY;
 		
 		InfluenceMap.getInfluenceMap()[(int)pm.getY()/20][(int)pm.getX()/20] = Pacman.INFLUENCE_VALUE;
+
 		for (Ghost ghost : ghosts){
 			InfluenceMap.getInfluenceMap()[(int)ghost.getY()/20][(int)ghost.getX()/20] = Ghost.GHOST_INFLUENCE_VALUE;
 		}
@@ -44,6 +45,7 @@ public class InfluenceMapLocksmith {
 		for(int i = 0; i < 31; i++){
 			for(int j = 0; j < 28; j++){
 				influenceCopy[i][j] = InfluenceMap.getInfluenceMap()[i][j];
+				
 			}
 		}
 	
