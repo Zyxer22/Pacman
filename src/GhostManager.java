@@ -217,6 +217,9 @@ public class GhostManager {
 								red.directionSwitched = false;
 							}
 							else if (red.getState().equals("orb") || red.getState().equals("flashing")){
+								//String tempLastDirection = red.getLastDirection();
+								//choosePath(red);
+								//red.setLastDirection(tempLastDirection);
 								
 								float oldX, oldY;
 								oldX = red.getX();
@@ -246,8 +249,8 @@ public class GhostManager {
 									//if original path is ok, maybe switch at a junction
 									red.setPosition(oldX, oldY);
 									
-									/*
-									//let's take a junction
+									
+									String originalOKDirection = red.getDirection();
 									List<String> directions = new ArrayList<String>();
 									int index = 0;
 									if (!red.getDirection().equals("up")){
@@ -267,61 +270,39 @@ public class GhostManager {
 										index++;
 									}
 									
-									int randomNum = rand.nextInt(3);
-									String newDirection = directions.get(randomNum);
-									
-									if (!newDirection.equals(red.getLastDirection())){
-										continue;
-									}
-									
-									red.setDirection(newDirection);
-									red.move();
-									if (GameBoard.isBlocked(red)){
-										red.setPosition(oldX, oldY);
-										directions.remove(randomNum);
-										
-										randomNum = rand.nextInt(2);
+									String newDirection;
+									boolean foundGoodDirection = false;
+									while (directions.size() > 0){
+										int randomNum = rand.nextInt(directions.size());
 										newDirection = directions.get(randomNum);
-										
-										if (!newDirection.equals(red.getLastDirection())){
-											continue;
-										}
+										directions.remove(randomNum);
 										
 										red.setDirection(newDirection);
 										red.move();
 										
-										if (GameBoard.isBlocked(red)){
-											red.setPosition(oldX, oldY);
-											directions.remove(randomNum);
+										if (!GameBoard.isBlocked(red) && !newDirection.equals(red.getLastDirection())){
+											//test other directions
 											
-											if (!newDirection.equals(red.getLastDirection())){
-												continue;
+											if ((red.getDirection().equals("down") && originalOKDirection.equals("up")) ||
+													(red.getDirection().equals("up") && originalOKDirection.equals("down")) ||
+															(red.getDirection().equals("left") && originalOKDirection.equals("right")) ||
+															(red.getDirection().equals("down") && originalOKDirection.equals("up"))){
+												
 											}
-											
-											randomNum = rand.nextInt(1);
-											newDirection = directions.get(randomNum);
-											red.setDirection(newDirection);
-											red.move();
-											
-											if (GameBoard.isBlocked(red)){
+											else{
 												red.setPosition(oldX, oldY);
-												directions.remove(randomNum);
-												
-												newDirection = directions.get(0);
-												red.setDirection(newDirection);
-												red.move();
-												
-												if (GameBoard.isBlocked(red)){
-													red.setPosition(oldX, oldY);
-												}
+												red.setLastDirection(newDirection);
+												foundGoodDirection = true;
+												break;
 											}
-										}									
+										}
+										
+										red.setPosition(oldX, oldY);
+										
 									}
-									
-									
-									
-									
-									*/
+									if (foundGoodDirection == false){
+										red.setDirection(originalOKDirection);
+									}
 									
 								}
 								else{
