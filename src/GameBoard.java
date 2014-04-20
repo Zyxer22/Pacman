@@ -110,8 +110,17 @@ public class GameBoard {
 			else if (entity.getClass().getName().equals("Ghost")){
 				Ghost ghost = (Ghost)entity;
 				if (ghost.getPathReady().get() == true ){
-					
+					if(ghost.getState().equals("eaten")){
+						eyeRoll(ghost);
+						if(ghost.atHome()){
+							ghost.setStateChasing();
+							ghost.doReset.set(true);
+							//put ghost to sleep?
+						}
+					}
+					System.out.println(ghost.getType()+"\tX: "+ghost.getX()+"\tY: "+ghost.getY());
 					ghost.move();
+					System.out.println(ghost.getType()+"New X: "+ghost.getX()+"\tNew Y: "+ghost.getY());
 					if (isBlocked(entity)){
 						entity.setPosition(oldX, oldY);
 					}	
@@ -203,5 +212,113 @@ public class GameBoard {
 		}
 		
 		return false;
+	}
+	public void eyeRoll(Ghost ghost){
+		int x = (int)ghost.getX();
+		int y = (int)ghost.getY();
+
+		if(x <= 127 && (y == 26 || y == 106 || y == 166 || y == 406 || y == 526)){
+			ghost.setDirection("right");
+		}
+		else if(x >= 427 && (y == 26 || y == 106 || y == 166 || y == 406 || y == 526)){
+			ghost.setDirection("left");
+		}
+		else if(x > 127 && x < 247){
+			ghost.setDirection("left");
+		}
+		else if( x > 307 && x < 427){
+			ghost.setDirection("right");
+		}
+		else if( y < 106 && (x == 127 || x == 427)){
+			ghost.setDirection("up");
+		}
+		else if( y < 106 && ( x == 247 || x == 307)){
+			ghost.setDirection("down");
+		}
+		else if((y >= 106 && y < 166) && (x == 187 || x == 307)){
+			ghost.setDirection("down");
+		}
+		else if( y == 166 && (x >= 187 && x < 247)){
+			ghost.setDirection("right");
+		}
+		else if( y == 166 && (x > 307 && x <= 367)){
+			ghost.setDirection("left");
+		}
+		else if((x == 307 || x == 247) && (y < 226 && y >= 166)){
+			ghost.setDirection("down");
+		}
+		else if( y == 106 && x <= 127){
+			ghost.setDirection("right");
+		}
+		else if(y == 106 && !(x == 187 || x == 367)){
+			ghost.setDirection("left");
+		}
+		else if( (x == 127 || x == 427) && y <=527){
+			ghost.setDirection("up");
+		}
+		else if(x < 427 && y == 466){
+			ghost.setDirection("left");
+		}
+		else if(y == 586 && x != 27 && x != 527){
+			ghost.setDirection("left");
+		}
+		else if((x == 27 || x == 527) && (y <= 586 && y > 526)){
+			ghost.setDirection("up");
+		}
+		else if( (y <= 406 && y >466) && (x == 466 || x == 406)){
+			ghost.setDirection("down");
+		}
+		else if( y == 406 && (x <= 247 && x > 127)){
+			ghost.setDirection("left");
+		}
+		else if( y  == 406 && (x >= 307 && x < 427)){
+			ghost.setDirection("right");
+		}
+		else if(x == 527 && ( y <= 466 && y > 406)){
+			ghost.setDirection("up");
+		}
+		else if(x == 27 &&  ( y <= 466 && y > 406)){
+			ghost.setDirection("up");
+		}
+		else if((x == 487 || x == 67) && (y < 526 && y > 466)){
+			ghost.setDirection("up");
+		}
+		else if( (x < 67 && x > 27) && y == 466){
+			ghost.setDirection("left");
+		}
+		else if( (x < 527 && x > 487) && y == 466){
+			ghost.setDirection("right");
+		}
+		else if( (x == 307 || x == 247) && (y <586 && y >=526)){
+			ghost.setDirection("down");
+		}
+		else if( y == 526 && (x < 247 && x > 187)){
+			ghost.setDirection("left");
+		}
+		else if( y == 526 && (x > 307 && x < 367)){
+			ghost.setDirection("right");
+		}
+		else if( (x == 367 || x == 187) && (y <=526 && y > 466)){
+			ghost.setDirection("up");
+		}
+		else if( y == 286 && (x > 367 && x < 427)){
+			ghost.setDirection("right");
+		}
+		else if( y == 286 && (x < 187 && x > 127)){
+			ghost.setDirection("left");
+		}
+		else if(y == 346 && (x < 367 && x > 187)){
+			ghost.setDirection("left");
+		}
+		else if(x == 187 || x == 367){
+			ghost.setDirection("up");
+		}
+		else if(y == 226 && (x <=367 && x > 287)){
+			ghost.setDirection("left");
+		}
+		else if(y == 226 && (x >= 187 && x < 287)){
+			ghost.setDirection("right");
+		}
+		else ghost.setDirection("down");
 	}
 }

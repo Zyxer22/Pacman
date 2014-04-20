@@ -188,6 +188,7 @@ public class GhostManager {
 								red.setIsBlocked(false);
 								red.doReset.set(false);
 								red.setStateChasing();
+								//Thread.sleep(red.putToSleep(2));
 								//red.doReset.set(false);
 							}
 							else{
@@ -1155,11 +1156,6 @@ public class GhostManager {
 	
 		public  String chooseOrbPath(Ghost ghost, List<String> validStrings){
 			return null;
-			
-			
-			
-	  			
-	  		
 		}
 		
 		public String getOrbDirection(Ghost ghost){
@@ -1203,6 +1199,4 @@ public class GhostManager {
 			return null;
 		}
 	}
-	
-
 	

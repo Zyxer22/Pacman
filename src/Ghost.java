@@ -104,11 +104,11 @@ public class Ghost implements Entity{
 		
 	}
 	
-	public void setX(float x){
+	public synchronized void setX(float x){
 		position.setX(x);
 	}
 	
-	public void setY(float y){
+	public synchronized void setY(float y){
 		position.setY(y);
 	}
 	
@@ -117,11 +117,11 @@ public class Ghost implements Entity{
 		position.setY(y);
 	}
 	
-	public float getX(){
+	public synchronized float getX(){
 		return position.getX();
 	}
 	
-	public float getY(){
+	public synchronized float getY(){
 		return position.getY();
 	}
 	
@@ -300,7 +300,7 @@ public class Ghost implements Entity{
 	}
 
 	@Override
-	public void move() {
+	public synchronized void move() {
 		float curX, curY;
 		curX = getX();
 		curY = getY();
@@ -320,14 +320,7 @@ public class Ghost implements Entity{
 			curY += GameBoard.tileLength/4;
 			setY(curY);
 		}
-		
-		//lastDirection = getDirection();
 		updateCenter();
-		int y = (int) (getX()/20);
-		int x = (int) (getY()/20);
-		//InfluenceMap.getInfluenceMap()[x][y] = GHOST_INFLUENCE_VALUE;
-		
-		
 	}
 
 	@Override
@@ -395,5 +388,12 @@ public class Ghost implements Entity{
 	
 	public void setLastDirection(String direction){
 		lastDirection = direction;
+	}
+	public boolean atHome(){
+		int x = (int)getX();
+		int y = (int)getY();
+		if((x > 187 && x < 367) && (y < 346 && y < 226))
+			return true;
+		else return false;
 	}
 }
