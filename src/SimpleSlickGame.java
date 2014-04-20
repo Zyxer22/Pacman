@@ -77,18 +77,8 @@ public class SimpleSlickGame extends BasicGame
 		gb.addEntity(GhostManager.getRedGhost());
 		gb.addEntity(GhostManager.getYellowGhost());
 		gb.addEntity(GhostManager.getPinkGhost());
-		
-		
-		//gb.addEntity(new Orb(sm.getOrbSprites(),200,232f,"small"));
-/*		largeOrb = new Orb(sm.getOrbSprites(), 200, 230, "large");
-		smallOrb = new Orb(sm.getOrbSprites(), 220, 232f, "small");
-		otherOrb = new Orb(sm.getOrbSprites(),200,250, "small");
-		gb.addEntity(otherOrb);
 
-		
-		gb.addEntity(largeOrb);
-		gb.addEntity(smallOrb);*/
-		
+		//for some reason, adding entities via array didn't work?
 		populateOrbs();
 		
 		
