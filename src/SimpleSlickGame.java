@@ -119,6 +119,7 @@ public class SimpleSlickGame extends BasicGame
 		pm.setY(466);
 		pm.updateCenter();
 		pm.setDirectionLeft();
+		pm.setNextState("left");
 		GhostManager.resetGhostPositions();
 		InfluenceMap.resetInfluence();
 		while(GameBoard.getLives() < 3)
@@ -131,6 +132,7 @@ public class SimpleSlickGame extends BasicGame
 		for(Ghost ghost : ghosts){
 			ghost.setGameRunning(false);
 		}
+		gb.incrementScore(-1*gb.getScore());
 	}
 
 	@Override
