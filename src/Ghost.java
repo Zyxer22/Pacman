@@ -190,23 +190,23 @@ public class Ghost implements Entity{
 	}
 	
 	public void updateCurrentAnimation(){
-		if (direction.equals("left") && (state.equals("chasing") || state.equals("running"))){
+		if (direction.equals("left") && (state.equals("chasing") || state.equals("running") || state.equals("starting"))){
 			//frame matching
 			currentAnimation.stop();
 			currentAnimation = leftAnimation;
 			currentAnimation.start();
 		}
-		else if (direction.equals("right") && (state.equals("chasing") || state.equals("running"))){
+		else if (direction.equals("right") && (state.equals("chasing") || state.equals("running") || state.equals("starting"))){
 			currentAnimation.stop();
 			currentAnimation = rightAnimation;
 			currentAnimation.start();
 		}
-		else if (direction.equals("up") && (state.equals("chasing") || state.equals("running"))){
+		else if (direction.equals("up") && (state.equals("chasing") || state.equals("running") || state.equals("starting"))){
 			currentAnimation.stop();
 			currentAnimation = upAnimation;
 			currentAnimation.start();
 		}
-		else if (direction.equals("down") && (state.equals("chasing") || state.equals("running"))){
+		else if (direction.equals("down") && (state.equals("chasing") || state.equals("running") || state.equals("starting"))){
 			currentAnimation.stop();
 			currentAnimation = downAnimation;
 			currentAnimation.start();
@@ -272,6 +272,12 @@ public class Ghost implements Entity{
 		state = "flashing";
 		updateCurrentAnimation();
 	}
+	
+	public void setStateStarting(){
+		state = "starting";
+		updateCurrentAnimation();
+	}
+	
 	public String getState(){
 		return this.state;
 	}

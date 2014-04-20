@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 
@@ -6,19 +9,26 @@ public class GhostManager {
 	static int orbTimer = 80000;
 	private static boolean timerOn = false;
 	private InfluenceMapLocksmith influenceMapLocksmith;
+	private String[] directions;
+	private Random rand = new Random();
 	
 	public GhostManager(InfluenceMapLocksmith influenceMapLocksmith){
 		ghosts = new Ghost[4];
 		this.influenceMapLocksmith = influenceMapLocksmith;
 		influenceMapLocksmith.addGhosts(ghosts);
+		directions = new String[4];
+		directions[0] = "up";
+		directions[1] = "left";
+		directions[2] = "down";
+		directions[3] = "right";
 		
 	}
 	
 	public void initializeGhosts(SpriteManager sm){
-		ghosts[0] = new Ghost(sm.getRedGhostSprites(), "red", 260, 290, "chasing");
-		ghosts[1] = new Ghost(sm.getPinkGhostSprites(), "pink", 260, 310, "chasing");
-		ghosts[2] = new Ghost(sm.getBlueGhostSprites(), "blue", 280, 310, "chasing");
-		ghosts[3] = new Ghost(sm.getYellowGhostSprites(), "yellow", 280, 290, "chasing");
+		ghosts[0] = new Ghost(sm.getRedGhostSprites(), "red", 260, 290, "starting");
+		ghosts[1] = new Ghost(sm.getPinkGhostSprites(), "pink", 260, 310, "starting");
+		ghosts[2] = new Ghost(sm.getBlueGhostSprites(), "blue", 280, 310, "starting");
+		ghosts[3] = new Ghost(sm.getYellowGhostSprites(), "yellow", 280, 290, "starting");
 	}
 	
 /*==================================================*
@@ -79,12 +89,12 @@ public class GhostManager {
 	}
 	public static void setGhostsFlashing(){
 		for (Ghost ghost : ghosts)
-			if(!ghost.getState().equals("eaten"))
+			if(ghost.getState().equals("orb"))
 				ghost.setStateFlashing();
 	}
 	public static void setGhostsOrb(){
 		for (Ghost ghost : ghosts)
-			if(!ghost.getState().equals("eaten"))
+			if(!ghost.getState().equals("eaten") && !ghost.getState().equals("starting"))
 				ghost.setStateOrb();
 		orbTimer = 225;
 		timerOn = true;
@@ -159,6 +169,7 @@ public class GhostManager {
 				try {
 					Thread.sleep(red.putToSleep(0));
 					red.wake();
+					List<String> validStrings = new ArrayList<String>();
 					
 					while(true){
 						while (red.isAsleep()){
@@ -172,6 +183,7 @@ public class GhostManager {
 								System.out.println("position: " + red.getX() + ", " + red.getY());
 								red.setIsBlocked(false);
 								red.doReset.set(false);
+								red.setStateChasing();
 								//red.doReset.set(false);
 							}
 							else{
@@ -203,7 +215,14 @@ public class GhostManager {
 								}
 								red.setIsBlocked(false);
 							}
-							choosePath(red);
+							if (red.getState().equals("chasing") || red.getState().equals("running")){
+								choosePath(red);
+							}
+							else{
+								choosePath(red);
+								chooseOrbPath(red, validStrings);
+							}
+							
 							//synchronized(red.getCondition()){
 		
 									//System.out.println("red awaiting...");
@@ -246,6 +265,7 @@ public class GhostManager {
 								System.out.println("position: " + pink.getX() + ", " + pink.getY());
 								pink.setIsBlocked(false);
 								pink.doReset.set(false);
+								pink.setStateChasing();
 								//pink.doReset.set(false);
 							}
 							else{
@@ -321,6 +341,7 @@ public class GhostManager {
 								System.out.println("position: " + blue.getX() + ", " + blue.getY());
 								blue.setIsBlocked(false);
 								blue.doReset.set(false);
+								blue.setStateChasing();
 								//blue.doReset.set(false);
 							}
 							else{
@@ -352,6 +373,7 @@ public class GhostManager {
 								}
 								blue.setIsBlocked(false);
 							}
+							
 							choosePath(blue);
 							//synchronized(blue.getCondition()){
 		
@@ -395,6 +417,7 @@ public class GhostManager {
 								System.out.println("position: " + yellow.getX() + ", " + yellow.getY());
 								yellow.setIsBlocked(false);
 								yellow.doReset.set(false);
+								yellow.setStateChasing();
 								//yellow.doReset.set(false);
 							}
 							else{
@@ -458,6 +481,7 @@ public class GhostManager {
  *==================================================*/
 	
 	public void choosePath(Ghost ghost){
+		
 		//get current position
 		  		int y = (int) (ghost.getX()/20);
 		  		int x = (int) (ghost.getY()/20);
@@ -515,7 +539,17 @@ public class GhostManager {
 		  			//ghost.getPathReady().set(true);
 		  			//System.out.println(ghost.getType() + " pathReady True");
 		  			
-		  		}
+		  		
+		  	}
+	
+		public  String chooseOrbPath(Ghost ghost, List<String> validStrings){
+			return null;
+			
+			
+			
+	  			
+	  		
+		}
 	}
 	
 
