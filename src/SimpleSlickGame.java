@@ -106,7 +106,31 @@ public class SimpleSlickGame extends BasicGame
 			InfluenceMap.resetInfluence();
 			return true;
 		}
+		if(GameBoard.getLives() == 0 || gb.entities.size() == 5){
+			resetGame();
+			return true;
+		}
 		return false;
+	}
+	
+	private void resetGame(){
+		pm.setStateMoving();
+		pm.setX(272);
+		pm.setY(466);
+		pm.updateCenter();
+		pm.setDirectionLeft();
+		GhostManager.resetGhostPositions();
+		InfluenceMap.resetInfluence();
+		while(GameBoard.getLives() < 3)
+			GameBoard.addLife();
+		for(int i = 5; i < gb.entities.size();i++)
+			gb.entities.remove(i);
+		populateOrbs();
+		animateOrbs();
+		Ghost ghosts[] = GhostManager.getGhosts();
+		for(Ghost ghost : ghosts){
+			ghost.setGameRunning(false);
+		}
 	}
 
 	@Override
@@ -130,6 +154,8 @@ public class SimpleSlickGame extends BasicGame
 				timeBetweenMove = 0;
 				iml.propagateInfluence();
 			}
+			else if(gb.entities.size() < 6)
+				this.resetGame();
 			else if(timeBetweenMove > 1380)
 				recoverFromDeath();
 		}	

@@ -37,6 +37,7 @@ public class Ghost implements Entity{
 	private boolean blocked = false;
 	public AtomicBoolean doReset = new AtomicBoolean(true);
 	public boolean directionSwitched = false;
+	private boolean gameRunning = true;
 	
 	public Ghost(Image[] sprites, String type, float x, float y, String state){
 		position = new Position(x, y);
@@ -188,6 +189,13 @@ public class Ghost implements Entity{
 	
 	public String getDirection(){
 		return direction;
+	}
+	public boolean isGameRunning() {
+		return gameRunning;
+	}
+
+	public void setGameRunning(boolean y) {
+		gameRunning = y;
 	}
 	
 	public void updateCurrentAnimation(){
