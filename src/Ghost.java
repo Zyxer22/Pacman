@@ -36,6 +36,7 @@ public class Ghost implements Entity{
 	private String lastDirection;
 	private boolean blocked = false;
 	public AtomicBoolean doReset = new AtomicBoolean(true);
+	public boolean directionSwitched = false;
 	
 	public Ghost(Image[] sprites, String type, float x, float y, String state){
 		position = new Position(x, y);

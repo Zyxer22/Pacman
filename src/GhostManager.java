@@ -131,9 +131,6 @@ public class GhostManager {
 		
 		getYellowGhost().updateCenter();
 		getRedGhost().wake();
-		getPinkGhost().wake();
-		getBlueGhost().wake();
-		getYellowGhost().wake();
 		
 		
 	}
@@ -217,10 +214,174 @@ public class GhostManager {
 							}
 							if (red.getState().equals("chasing") || red.getState().equals("running")){
 								choosePath(red);
+								red.directionSwitched = false;
 							}
-							else{
-								choosePath(red);
-								chooseOrbPath(red, validStrings);
+							else if (red.getState().equals("orb") || red.getState().equals("flashing")){
+								
+								float oldX, oldY;
+								oldX = red.getX();
+								oldY = red.getY();
+								
+								if (red.directionSwitched == false){
+									if (red.getDirection().equals("up")){
+										red.setDirectionDown();
+									}
+									else if (red.getDirection().equals("down")){
+										red.setDirectionUp();
+									}
+									else if (red.getDirection().equals("left")){
+										red.setDirectionRight();
+									}
+									else{
+										red.setDirectionLeft();
+									}
+									
+									red.directionSwitched = true;
+								}
+								
+								red.move();
+								if (!GameBoard.isBlocked(red)){
+									
+									
+									//if original path is ok, maybe switch at a junction
+									red.setPosition(oldX, oldY);
+									
+									/*
+									//let's take a junction
+									List<String> directions = new ArrayList<String>();
+									int index = 0;
+									if (!red.getDirection().equals("up")){
+										directions.add("up");
+										index++;
+									}
+									if (!red.getDirection().equals("left")){
+										directions.add("left");
+										index++;
+									}
+									if (!red.getDirection().equals("down")){
+										directions.add("down");
+										index++;
+									}
+									if (!red.getDirection().equals("right")){
+										directions.add("right");
+										index++;
+									}
+									
+									int randomNum = rand.nextInt(3);
+									String newDirection = directions.get(randomNum);
+									
+									if (!newDirection.equals(red.getLastDirection())){
+										continue;
+									}
+									
+									red.setDirection(newDirection);
+									red.move();
+									if (GameBoard.isBlocked(red)){
+										red.setPosition(oldX, oldY);
+										directions.remove(randomNum);
+										
+										randomNum = rand.nextInt(2);
+										newDirection = directions.get(randomNum);
+										
+										if (!newDirection.equals(red.getLastDirection())){
+											continue;
+										}
+										
+										red.setDirection(newDirection);
+										red.move();
+										
+										if (GameBoard.isBlocked(red)){
+											red.setPosition(oldX, oldY);
+											directions.remove(randomNum);
+											
+											if (!newDirection.equals(red.getLastDirection())){
+												continue;
+											}
+											
+											randomNum = rand.nextInt(1);
+											newDirection = directions.get(randomNum);
+											red.setDirection(newDirection);
+											red.move();
+											
+											if (GameBoard.isBlocked(red)){
+												red.setPosition(oldX, oldY);
+												directions.remove(randomNum);
+												
+												newDirection = directions.get(0);
+												red.setDirection(newDirection);
+												red.move();
+												
+												if (GameBoard.isBlocked(red)){
+													red.setPosition(oldX, oldY);
+												}
+											}
+										}									
+									}
+									
+									
+									
+									
+									*/
+									
+								}
+								else{
+									String newDirection;
+									//red.directionSwitched = false;
+									//randomize direction
+									List<String> directions = new ArrayList<String>();
+									int index = 0;
+									if (!red.getDirection().equals("up")){
+										directions.add("up");
+										index++;
+									}
+									if (!red.getDirection().equals("left")){
+										directions.add("left");
+										index++;
+									}
+									if (!red.getDirection().equals("down")){
+										directions.add("down");
+										index++;
+									}
+									if (!red.getDirection().equals("right")){
+										directions.add("right");
+										index++;
+									}
+									
+									int randomNum = rand.nextInt(3);
+									newDirection = directions.get(randomNum);
+									
+									red.setDirection(newDirection);
+									red.move();
+									if (GameBoard.isBlocked(red)){
+										red.setPosition(oldX, oldY);
+										directions.remove(randomNum);
+										
+										randomNum = rand.nextInt(2);
+										newDirection = directions.get(randomNum);
+										red.setDirection(newDirection);
+										red.move();
+										
+										if (GameBoard.isBlocked(red)){
+											red.setPosition(oldX, oldY);
+											directions.remove(randomNum);
+											
+											randomNum = rand.nextInt(1);
+											newDirection = directions.get(randomNum);
+											red.setDirection(newDirection);
+											red.move();
+											
+											if (GameBoard.isBlocked(red)){
+												red.setPosition(oldX, oldY);
+												
+											}
+										}									
+									}
+								
+									red.setPosition(oldX, oldY);
+								
+								}
+								red.setLastDirection(red.getDirection());
+								
 							}
 							
 							//synchronized(red.getCondition()){
@@ -235,6 +396,7 @@ public class GhostManager {
 							//}
 						}
 					}
+						
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -549,6 +711,47 @@ public class GhostManager {
 			
 	  			
 	  		
+		}
+		
+		public String getOrbDirection(Ghost ghost){
+			int y = (int) (ghost.getX()/20);
+	  		int x = (int) (ghost.getY()/20);
+			
+			float left = influenceMapLocksmith.getInfluenceMap()[x][y -  1];
+	  		float right = influenceMapLocksmith.getInfluenceMap()[x][y + 1];
+	  		float up = influenceMapLocksmith.getInfluenceMap()[x -  1][y];
+	  		float down = influenceMapLocksmith.getInfluenceMap()[x + 1][y];
+	  		
+	  		//get highest weight with bias towards up,right,left,down
+	  		if( up <= right &&
+	  			up <= left &&
+	  			up <= down){
+	  				
+	  				return "up";
+	  				
+	  		}
+	  		else if( down <= right &&
+	  				 down <= left &&
+	  				 down <= up){
+	  				
+	  					return "down";
+	  		}
+	  		else if( right <= left &&
+	  				 right <= up &&
+	  				 right <= down){
+	  				
+	  					return "right";
+	  		}
+	  		else if( left <= right &&
+	  				 left <= up &&
+	  				 left <= down){
+	  					//System.out.println("left = " + left + "(x, y) = (" + x + ", " + y + ")");
+	  				
+	  					return "left";
+	  		}
+	  		
+	  		
+			return null;
 		}
 	}
 	
