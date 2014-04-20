@@ -20,7 +20,7 @@ public class GameBoard {
 	private int score = 0;
 	private static int lives = 3;
 	List<Entity> entities;
-	TiledMap tm;
+	static TiledMap tm;
 	InfluenceMapLocksmith influenceMapLocksmith;
 	
 	public static final String tileMapPath = "/BoardTileMap.tmx";
@@ -134,7 +134,7 @@ public class GameBoard {
 		return tm.getTileId((int)(entity.getX()/10), (int)(entity.getY()/10), 0);
 	}
 	
-	public boolean isBlocked(Entity entity){
+	public static boolean isBlocked(Entity entity){
 		//don't check for gate (ghosts can go through)
 		//do pacman check after
 		for (int i = 0; i < tm.getObjectCount(0) - 1; i++){
@@ -182,7 +182,7 @@ public class GameBoard {
 		return false;
 	}
 	
-	public boolean pacmanGateCheck(Pacman pacman){
+	public static boolean pacmanGateCheck(Pacman pacman){
 		int gateX = tm.getObjectX(0, tm.getObjectCount(0) - 1);
 		int gateY = tm.getObjectY(0, tm.getObjectCount(0) - 1);
 		int gateHeight = tm.getObjectHeight(0, tm.getObjectCount(0) - 1);
