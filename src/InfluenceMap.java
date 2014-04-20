@@ -71,11 +71,16 @@ public class InfluenceMap {
 	}
 	
 	public static float averageIt(int i, int j){
-		float a = 0.3f*(influenceMap[i+1][j]+influenceMap[i-1][j]
+		float a = 0.35f*(influenceMap[i+1][j]+influenceMap[i-1][j]
 					+influenceMap[i][j+1]+influenceMap[i][j-1]);
+		
+		/*
 		if(a > 1)
 			return a;
 		else return 1;
+		*/
+		
+		return a;
 	}
 	
 	public static void averageIt(float[][] influenceMap){
@@ -83,15 +88,19 @@ public class InfluenceMap {
 		for(int i = 1; i < 30; i++){
 			for(int j = 1; j < influenceMap[i].length-2; j++){
 				if (influenceMap[i][j] != 0){
-					a = 0.3f*(influenceMap[i+1][j]+influenceMap[i-1][j]
+					a = 0.35f*(influenceMap[i+1][j]+influenceMap[i-1][j]
 					+influenceMap[i][j+1]+influenceMap[i][j-1]);
 					
+					influenceMap[i][j] = a;
+					
+					/*
 					if(a > 1){
 						influenceMap[i][j] = a;
 					}
 					else{
 						influenceMap[i][j] = 1.0f;
 					}
+					*/
 					
 				}
 			}

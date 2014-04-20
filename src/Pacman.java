@@ -27,7 +27,7 @@ public class Pacman implements Entity{
 	private static final double FAST = 1.125;
 	private static final double DEFAULT = 1;
 	private static final double EATING = 0.8875;
-	public static final float INFLUENCE_VALUE = 1000000000;
+	public static final float INFLUENCE_VALUE = 2000000000;
 	
 	public Pacman(Image[] sprites){
 		position = new Position(272, 466);

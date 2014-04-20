@@ -109,7 +109,7 @@ public class SimpleSlickGame extends BasicGame
 		if(pm.isDead() && GameBoard.getLives() > 0){
 			pm.setStateMoving();
 			pm.setX(272);
-			pm.setY(465);
+			pm.setY(466);
 			pm.updateCenter();
 			pm.setDirectionLeft();
 			GhostManager.resetGhostPositions();
@@ -174,7 +174,7 @@ public class SimpleSlickGame extends BasicGame
 				for(int j = 0; j<560;j+=20){
 					g.drawString((""+(int)iml.getInfluenceMap()[i/20][j/20]),10+j,5+i);
 				}
-			}*/			
+			}	*/	
 	}
 
 

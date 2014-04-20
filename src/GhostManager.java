@@ -14,10 +14,10 @@ public class GhostManager {
 	}
 	
 	public void initializeGhosts(SpriteManager sm){
-		ghosts[0] = new Ghost(sm.getRedGhostSprites(), "red", 260, 310, "chasing");
+		ghosts[0] = new Ghost(sm.getRedGhostSprites(), "red", 260, 290, "chasing");
 		ghosts[1] = new Ghost(sm.getPinkGhostSprites(), "pink", 260, 310, "chasing");
-		ghosts[2] = new Ghost(sm.getBlueGhostSprites(), "blue", 260, 310, "chasing");
-		ghosts[3] = new Ghost(sm.getYellowGhostSprites(), "yellow", 260, 310, "chasing");
+		ghosts[2] = new Ghost(sm.getBlueGhostSprites(), "blue", 280, 310, "chasing");
+		ghosts[3] = new Ghost(sm.getYellowGhostSprites(), "yellow", 280, 290, "chasing");
 	}
 	
 /*==================================================*
@@ -90,17 +90,21 @@ public class GhostManager {
 	}
 	public static void resetGhostPositions(){
 		setGhostsChasing();
-		getRedGhost().setX(240);
-		getRedGhost().setY(300);
+		getRedGhost().setX(260);
+		getRedGhost().setY(390);
+		getRedGhost().setIsBlocked(false);
 		getRedGhost().updateCenter();
 		getPinkGhost().setX(260);
-		getPinkGhost().setY(300);
+		getPinkGhost().setY(310);
 		getPinkGhost().updateCenter();
+		getPinkGhost().setIsBlocked(false);
 		getBlueGhost().setX(280);
-		getBlueGhost().setY(300);
+		getBlueGhost().setY(310);
+		getBlueGhost().setIsBlocked(false);
 		getBlueGhost().updateCenter();
-		getYellowGhost().setX(300);
-		getYellowGhost().setY(300);
+		getYellowGhost().setX(280);
+		getYellowGhost().setY(390);
+		getYellowGhost().setIsBlocked(false);
 		getYellowGhost().updateCenter();
 		getRedGhost().doReset.set(true);
 		getBlueGhost().doReset.set(true);
@@ -140,32 +144,67 @@ public class GhostManager {
 				try {
 					Thread.sleep(red.putToSleep(0));
 					red.wake();
+					
 					while(true){
-						if (red.getX() == 260 && red.getY() == 230){
-							break;
-						}
-						red.lock();
-						red.setDirectionUp();
-						red.getPathReady().set(true);
-						red.await();
-					}
-					while(true){
-						choosePath(red);
-						//synchronized(red.getCondition()){
 						
+						if (red.doReset.get() == true){
+							if (red.isBlocked()){
+								red.setPosition(262.0f, 226.0f);
+								System.out.println("position: " + red.getX() + ", " + red.getY());
+								red.setIsBlocked(false);
+								red.doReset.set(false);
+								//red.doReset.set(false);
+							}
+							else{
+							//if (red.getX() == 187 && red.getY() == 225){
+								//break;
+							//}
 								red.lock();
-								//System.out.println("Red awaiting...");
+								red.setDirectionUp();
 								red.getPathReady().set(true);
 								red.await();
-								//System.out.println("Red awake...");
-								
-						//	}
+							}
+						}
+						else{
+							if (red.isBlocked()){
+								//System.out.println("position: " + red.getX() + ", " + red.getY());
+								System.out.println("LastDirection = " + red.getLastDirection());
+								if (red.getLastDirection().equals("up")){
+									red.setPosition(red.getX(), red.getY() - 5);
+								}
+								else if (red.getLastDirection().equals("down")){
+									red.setPosition(red.getX(), red.getY() + 5);
+								}
+								else if (red.getLastDirection().equals("left")){
+									red.setPosition(red.getX() - 5, red.getY());
+								}
+								else if (red.getLastDirection().equals("right")){
+									red.setPosition(red.getX() + 5, red.getY());
+									
+								}
+								red.setIsBlocked(false);
+							}
+							choosePath(red);
+							//synchronized(red.getCondition()){
+		
+									//System.out.println("red awaiting...");
+									red.lock();
+									red.getPathReady().set(true);
+									//System.out.println("red Condition Hashcode: " + red.getCondition().hashCode());
+									red.await();
+									//System.out.println("red awake...");
+	
+							//}
+						}
 					}
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-	        System.out.println("Red incoming");
+	        	finally{
+	        		red.unlock();
+	        	}
+	        System.out.println("redy will survive");
 	    }  
 	};
 	Thread pinkLogic = new Thread() {
@@ -245,68 +284,137 @@ public class GhostManager {
 				try {
 					Thread.sleep(blue.putToSleep(0));
 					blue.wake();
+					
 					while(true){
-						if (blue.getX() == 260 && blue.getY() == 230){
-							break;
-						}
-						blue.lock();
-						blue.setDirectionUp();
-						blue.getPathReady().set(true);
-						blue.await();
-					}
-					while(true){
-						choosePath(blue);
-						//synchronized(blue.getCondition()){
-							
+						
+						if (blue.doReset.get() == true){
+							if (blue.isBlocked()){
+								blue.setPosition(282.0f, 226.0f);
+								System.out.println("position: " + blue.getX() + ", " + blue.getY());
+								blue.setIsBlocked(false);
+								blue.doReset.set(false);
+								//blue.doReset.set(false);
+							}
+							else{
+							//if (blue.getX() == 187 && blue.getY() == 225){
+								//break;
+							//}
 								blue.lock();
-								//System.out.println("Blue awaiting...");
+								blue.setDirectionUp();
 								blue.getPathReady().set(true);
 								blue.await();
-								//System.out.println("Blue awake...");
-							
-						
+							}
+						}
+						else{
+							if (blue.isBlocked()){
+								//System.out.println("position: " + blue.getX() + ", " + blue.getY());
+								System.out.println("LastDirection = " + blue.getLastDirection());
+								if (blue.getLastDirection().equals("up")){
+									blue.setPosition(blue.getX(), blue.getY() - 5);
+								}
+								else if (blue.getLastDirection().equals("down")){
+									blue.setPosition(blue.getX(), blue.getY() + 5);
+								}
+								else if (blue.getLastDirection().equals("left")){
+									blue.setPosition(blue.getX() - 5, blue.getY());
+								}
+								else if (blue.getLastDirection().equals("right")){
+									blue.setPosition(blue.getX() + 5, blue.getY());
+									
+								}
+								blue.setIsBlocked(false);
+							}
+							choosePath(blue);
+							//synchronized(blue.getCondition()){
+		
+									//System.out.println("blue awaiting...");
+									blue.lock();
+									blue.getPathReady().set(true);
+									//System.out.println("blue Condition Hashcode: " + blue.getCondition().hashCode());
+									blue.await();
+									//System.out.println("blue awake...");
+	
+							//}
+						}
 					}
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-	        System.out.println("The blue bomber will blow you away!");
+	        	finally{
+	        		blue.unlock();
+	        	}
+	        System.out.println("bluey will survive");
 	    }  
 	};
 	Thread yellowLogic = new Thread() {
-	    public void run() {
+		public void run() {
 	        Ghost yellow = getYellowGhost();
 	        if(yellow.isAsleep())
 				try {
 					Thread.sleep(yellow.putToSleep(0));
 					yellow.wake();
+					
 					while(true){
-						if (yellow.getX() == 260 && yellow.getY() == 230){
-							break;
-						}
-						yellow.lock();
-						yellow.setDirectionUp();
-						yellow.getPathReady().set(true);
-						yellow.await();
-					}
-					while(true){
-						choosePath(yellow);
-						//synchronized(yellow.getCondition()){
-
+						
+						if (yellow.doReset.get() == true){
+							if (yellow.isBlocked()){
+								yellow.setPosition(282.0f, 226.0f);
+								System.out.println("position: " + yellow.getX() + ", " + yellow.getY());
+								yellow.setIsBlocked(false);
+								yellow.doReset.set(false);
+								//yellow.doReset.set(false);
+							}
+							else{
+							//if (yellow.getX() == 187 && yellow.getY() == 225){
+								//break;
+							//}
 								yellow.lock();
-								//System.out.println("Yellow awaiting...");
+								yellow.setDirectionUp();
 								yellow.getPathReady().set(true);
-								//System.out.println("condition hash: " + yellow.getCondition().hashCode());
 								yellow.await();
-								//System.out.println("Yellow awake...");
-							
-						//}
+							}
+						}
+						else{
+							if (yellow.isBlocked()){
+								//System.out.println("position: " + yellow.getX() + ", " + yellow.getY());
+								System.out.println("LastDirection = " + yellow.getLastDirection());
+								if (yellow.getLastDirection().equals("up")){
+									yellow.setPosition(yellow.getX(), yellow.getY() - 5);
+								}
+								else if (yellow.getLastDirection().equals("down")){
+									yellow.setPosition(yellow.getX(), yellow.getY() + 5);
+								}
+								else if (yellow.getLastDirection().equals("left")){
+									yellow.setPosition(yellow.getX() - 5, yellow.getY());
+								}
+								else if (yellow.getLastDirection().equals("right")){
+									yellow.setPosition(yellow.getX() + 5, yellow.getY());
+									
+								}
+								yellow.setIsBlocked(false);
+							}
+							choosePath(yellow);
+							//synchronized(yellow.getCondition()){
+		
+									//System.out.println("yellow awaiting...");
+									yellow.lock();
+									yellow.getPathReady().set(true);
+									//System.out.println("yellow Condition Hashcode: " + yellow.getCondition().hashCode());
+									yellow.await();
+									//System.out.println("yellow awake...");
+	
+							//}
+						}
 					}
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-	        System.out.println("Yellow here?");
+	        	finally{
+	        		yellow.unlock();
+	        	}
+	        System.out.println("yellowy will survive");
 	    }  
 	};
 	
