@@ -100,6 +100,10 @@ public class GhostManager {
 		timerOn = true;
 	}
 	public static void resetGhostPositions(){
+		getRedGhost().setStateStarting();
+		getBlueGhost().setStateStarting();
+		getYellowGhost().setStateStarting();
+		getPinkGhost().setStateStarting();
 		getRedGhost().sleep();
 		getRedGhost().doReset.set(true);
 		getBlueGhost().sleep();
@@ -113,7 +117,8 @@ public class GhostManager {
 		getPinkGhost().setIsBlocked(false);
 		getYellowGhost().setIsBlocked(false);
 		
-		setGhostsChasing();
+		//setGhostsChasing();
+		
 		getRedGhost().setX(260);
 		getRedGhost().setY(290);
 		
@@ -171,8 +176,10 @@ public class GhostManager {
 					while(true){
 						while (red.isAsleep()){
 							Thread.sleep(red.putToSleep(0));
-							red.wake();
+							
 						}
+						
+						getPinkGhost().wake();
 						
 						if (red.doReset.get() == true){
 							if (red.isBlocked()){
@@ -392,15 +399,18 @@ public class GhostManager {
 		public void run() {
 	        Ghost pink = getPinkGhost();
 	        if(pink.isAsleep())
-				try {
+	        	try {
 					Thread.sleep(pink.putToSleep(10));
 					pink.wake();
+					List<String> validStrings = new ArrayList<String>();
 					
 					while(true){
 						while (pink.isAsleep()){
-							Thread.sleep(pink.putToSleep(20));
-							pink.wake();
+							Thread.sleep(pink.putToSleep(10));
+							
 						}
+						
+						getBlueGhost().wake();
 						
 						if (pink.doReset.get() == true){
 							if (pink.isBlocked()){
@@ -440,15 +450,167 @@ public class GhostManager {
 								}
 								pink.setIsBlocked(false);
 							}
-							choosePath(pink);
+							if (pink.getState().equals("chasing") || pink.getState().equals("running")){
+								choosePath(pink);
+								pink.directionSwitched = false;
+							}
+							else if (pink.getState().equals("orb") || pink.getState().equals("flashing")){
+								//String tempLastDirection = pink.getLastDirection();
+								//choosePath(pink);
+								//pink.setLastDirection(tempLastDirection);
+								
+								float oldX, oldY;
+								oldX = pink.getX();
+								oldY = pink.getY();
+								
+								if (pink.directionSwitched == false){
+									if (pink.getDirection().equals("up")){
+										pink.setDirectionDown();
+									}
+									else if (pink.getDirection().equals("down")){
+										pink.setDirectionUp();
+									}
+									else if (pink.getDirection().equals("left")){
+										pink.setDirectionRight();
+									}
+									else{
+										pink.setDirectionLeft();
+									}
+									
+									pink.directionSwitched = true;
+								}
+								
+								pink.move();
+								if (!GameBoard.isBlocked(pink)){
+									
+									
+									//if original path is ok, maybe switch at a junction
+									pink.setPosition(oldX, oldY);
+									
+									
+									String originalOKDirection = pink.getDirection();
+									List<String> directions = new ArrayList<String>();
+									int index = 0;
+									if (!pink.getDirection().equals("up")){
+										directions.add("up");
+										index++;
+									}
+									if (!pink.getDirection().equals("left")){
+										directions.add("left");
+										index++;
+									}
+									if (!pink.getDirection().equals("down")){
+										directions.add("down");
+										index++;
+									}
+									if (!pink.getDirection().equals("right")){
+										directions.add("right");
+										index++;
+									}
+									
+									String newDirection;
+									boolean foundGoodDirection = false;
+									while (directions.size() > 0){
+										int randomNum = rand.nextInt(directions.size());
+										newDirection = directions.get(randomNum);
+										directions.remove(randomNum);
+										
+										pink.setDirection(newDirection);
+										pink.move();
+										
+										if (!GameBoard.isBlocked(pink) && !newDirection.equals(pink.getLastDirection())){
+											//test other directions
+											
+											if ((pink.getDirection().equals("down") && originalOKDirection.equals("up")) ||
+													(pink.getDirection().equals("up") && originalOKDirection.equals("down")) ||
+															(pink.getDirection().equals("left") && originalOKDirection.equals("right")) ||
+															(pink.getDirection().equals("down") && originalOKDirection.equals("up"))){
+												
+											}
+											else{
+												pink.setPosition(oldX, oldY);
+												pink.setLastDirection(newDirection);
+												foundGoodDirection = true;
+												break;
+											}
+										}
+										
+										pink.setPosition(oldX, oldY);
+										
+									}
+									if (foundGoodDirection == false){
+										pink.setDirection(originalOKDirection);
+									}
+									
+								}
+								else{
+									String newDirection;
+									//pink.directionSwitched = false;
+									//randomize direction
+									List<String> directions = new ArrayList<String>();
+									int index = 0;
+									if (!pink.getDirection().equals("up")){
+										directions.add("up");
+										index++;
+									}
+									if (!pink.getDirection().equals("left")){
+										directions.add("left");
+										index++;
+									}
+									if (!pink.getDirection().equals("down")){
+										directions.add("down");
+										index++;
+									}
+									if (!pink.getDirection().equals("right")){
+										directions.add("right");
+										index++;
+									}
+									
+									int randomNum = rand.nextInt(3);
+									newDirection = directions.get(randomNum);
+									
+									pink.setDirection(newDirection);
+									pink.move();
+									if (GameBoard.isBlocked(pink)){
+										pink.setPosition(oldX, oldY);
+										directions.remove(randomNum);
+										
+										randomNum = rand.nextInt(2);
+										newDirection = directions.get(randomNum);
+										pink.setDirection(newDirection);
+										pink.move();
+										
+										if (GameBoard.isBlocked(pink)){
+											pink.setPosition(oldX, oldY);
+											directions.remove(randomNum);
+											
+											randomNum = rand.nextInt(1);
+											newDirection = directions.get(randomNum);
+											pink.setDirection(newDirection);
+											pink.move();
+											
+											if (GameBoard.isBlocked(pink)){
+												pink.setPosition(oldX, oldY);
+												
+											}
+										}									
+									}
+								
+									pink.setPosition(oldX, oldY);
+								
+								}
+								pink.setLastDirection(pink.getDirection());
+								
+							}
+							
 							//synchronized(pink.getCondition()){
 		
-									//System.out.println("Pink awaiting...");
+									//System.out.println("pink awaiting...");
 									pink.lock();
 									pink.getPathReady().set(true);
-									//System.out.println("Pink Condition Hashcode: " + pink.getCondition().hashCode());
+									//System.out.println("pink Condition Hashcode: " + pink.getCondition().hashCode());
 									pink.await();
-									//System.out.println("Pink awake...");
+									//System.out.println("pink awake...");
 	
 							//}
 						}
@@ -467,16 +629,18 @@ public class GhostManager {
 		public void run() {
 	        Ghost blue = getBlueGhost();
 	        if(blue.isAsleep())
-				try {
+	        	try {
 					Thread.sleep(blue.putToSleep(20));
 					blue.wake();
+					List<String> validStrings = new ArrayList<String>();
 					
 					while(true){
-						
 						while (blue.isAsleep()){
 							Thread.sleep(blue.putToSleep(10));
-							blue.wake();
+							
 						}
+						
+						getYellowGhost().wake();
 						
 						if (blue.doReset.get() == true){
 							if (blue.isBlocked()){
@@ -516,8 +680,159 @@ public class GhostManager {
 								}
 								blue.setIsBlocked(false);
 							}
+							if (blue.getState().equals("chasing") || blue.getState().equals("running")){
+								choosePath(blue);
+								blue.directionSwitched = false;
+							}
+							else if (blue.getState().equals("orb") || blue.getState().equals("flashing")){
+								//String tempLastDirection = blue.getLastDirection();
+								//choosePath(blue);
+								//blue.setLastDirection(tempLastDirection);
+								
+								float oldX, oldY;
+								oldX = blue.getX();
+								oldY = blue.getY();
+								
+								if (blue.directionSwitched == false){
+									if (blue.getDirection().equals("up")){
+										blue.setDirectionDown();
+									}
+									else if (blue.getDirection().equals("down")){
+										blue.setDirectionUp();
+									}
+									else if (blue.getDirection().equals("left")){
+										blue.setDirectionRight();
+									}
+									else{
+										blue.setDirectionLeft();
+									}
+									
+									blue.directionSwitched = true;
+								}
+								
+								blue.move();
+								if (!GameBoard.isBlocked(blue)){
+									
+									
+									//if original path is ok, maybe switch at a junction
+									blue.setPosition(oldX, oldY);
+									
+									
+									String originalOKDirection = blue.getDirection();
+									List<String> directions = new ArrayList<String>();
+									int index = 0;
+									if (!blue.getDirection().equals("up")){
+										directions.add("up");
+										index++;
+									}
+									if (!blue.getDirection().equals("left")){
+										directions.add("left");
+										index++;
+									}
+									if (!blue.getDirection().equals("down")){
+										directions.add("down");
+										index++;
+									}
+									if (!blue.getDirection().equals("right")){
+										directions.add("right");
+										index++;
+									}
+									
+									String newDirection;
+									boolean foundGoodDirection = false;
+									while (directions.size() > 0){
+										int randomNum = rand.nextInt(directions.size());
+										newDirection = directions.get(randomNum);
+										directions.remove(randomNum);
+										
+										blue.setDirection(newDirection);
+										blue.move();
+										
+										if (!GameBoard.isBlocked(blue) && !newDirection.equals(blue.getLastDirection())){
+											//test other directions
+											
+											if ((blue.getDirection().equals("down") && originalOKDirection.equals("up")) ||
+													(blue.getDirection().equals("up") && originalOKDirection.equals("down")) ||
+															(blue.getDirection().equals("left") && originalOKDirection.equals("right")) ||
+															(blue.getDirection().equals("down") && originalOKDirection.equals("up"))){
+												
+											}
+											else{
+												blue.setPosition(oldX, oldY);
+												blue.setLastDirection(newDirection);
+												foundGoodDirection = true;
+												break;
+											}
+										}
+										
+										blue.setPosition(oldX, oldY);
+										
+									}
+									if (foundGoodDirection == false){
+										blue.setDirection(originalOKDirection);
+									}
+									
+								}
+								else{
+									String newDirection;
+									//blue.directionSwitched = false;
+									//randomize direction
+									List<String> directions = new ArrayList<String>();
+									int index = 0;
+									if (!blue.getDirection().equals("up")){
+										directions.add("up");
+										index++;
+									}
+									if (!blue.getDirection().equals("left")){
+										directions.add("left");
+										index++;
+									}
+									if (!blue.getDirection().equals("down")){
+										directions.add("down");
+										index++;
+									}
+									if (!blue.getDirection().equals("right")){
+										directions.add("right");
+										index++;
+									}
+									
+									int randomNum = rand.nextInt(3);
+									newDirection = directions.get(randomNum);
+									
+									blue.setDirection(newDirection);
+									blue.move();
+									if (GameBoard.isBlocked(blue)){
+										blue.setPosition(oldX, oldY);
+										directions.remove(randomNum);
+										
+										randomNum = rand.nextInt(2);
+										newDirection = directions.get(randomNum);
+										blue.setDirection(newDirection);
+										blue.move();
+										
+										if (GameBoard.isBlocked(blue)){
+											blue.setPosition(oldX, oldY);
+											directions.remove(randomNum);
+											
+											randomNum = rand.nextInt(1);
+											newDirection = directions.get(randomNum);
+											blue.setDirection(newDirection);
+											blue.move();
+											
+											if (GameBoard.isBlocked(blue)){
+												blue.setPosition(oldX, oldY);
+												
+											}
+										}									
+									}
+								
+									blue.setPosition(oldX, oldY);
+								
+								}
+								blue.setLastDirection(blue.getDirection());
+								
+							}
 							
-							choosePath(blue);
 							//synchronized(blue.getCondition()){
 		
 									//System.out.println("blue awaiting...");
@@ -544,14 +859,15 @@ public class GhostManager {
 		public void run() {
 	        Ghost yellow = getYellowGhost();
 	        if(yellow.isAsleep())
-				try {
+	        	try {
 					Thread.sleep(yellow.putToSleep(30));
 					yellow.wake();
+					List<String> validStrings = new ArrayList<String>();
 					
 					while(true){
 						while (yellow.isAsleep()){
 							Thread.sleep(yellow.putToSleep(10));
-							yellow.wake();
+							
 						}
 						
 						if (yellow.doReset.get() == true){
@@ -592,7 +908,159 @@ public class GhostManager {
 								}
 								yellow.setIsBlocked(false);
 							}
-							choosePath(yellow);
+							if (yellow.getState().equals("chasing") || yellow.getState().equals("running")){
+								choosePath(yellow);
+								yellow.directionSwitched = false;
+							}
+							else if (yellow.getState().equals("orb") || yellow.getState().equals("flashing")){
+								//String tempLastDirection = yellow.getLastDirection();
+								//choosePath(yellow);
+								//yellow.setLastDirection(tempLastDirection);
+								
+								float oldX, oldY;
+								oldX = yellow.getX();
+								oldY = yellow.getY();
+								
+								if (yellow.directionSwitched == false){
+									if (yellow.getDirection().equals("up")){
+										yellow.setDirectionDown();
+									}
+									else if (yellow.getDirection().equals("down")){
+										yellow.setDirectionUp();
+									}
+									else if (yellow.getDirection().equals("left")){
+										yellow.setDirectionRight();
+									}
+									else{
+										yellow.setDirectionLeft();
+									}
+									
+									yellow.directionSwitched = true;
+								}
+								
+								yellow.move();
+								if (!GameBoard.isBlocked(yellow)){
+									
+									
+									//if original path is ok, maybe switch at a junction
+									yellow.setPosition(oldX, oldY);
+									
+									
+									String originalOKDirection = yellow.getDirection();
+									List<String> directions = new ArrayList<String>();
+									int index = 0;
+									if (!yellow.getDirection().equals("up")){
+										directions.add("up");
+										index++;
+									}
+									if (!yellow.getDirection().equals("left")){
+										directions.add("left");
+										index++;
+									}
+									if (!yellow.getDirection().equals("down")){
+										directions.add("down");
+										index++;
+									}
+									if (!yellow.getDirection().equals("right")){
+										directions.add("right");
+										index++;
+									}
+									
+									String newDirection;
+									boolean foundGoodDirection = false;
+									while (directions.size() > 0){
+										int randomNum = rand.nextInt(directions.size());
+										newDirection = directions.get(randomNum);
+										directions.remove(randomNum);
+										
+										yellow.setDirection(newDirection);
+										yellow.move();
+										
+										if (!GameBoard.isBlocked(yellow) && !newDirection.equals(yellow.getLastDirection())){
+											//test other directions
+											
+											if ((yellow.getDirection().equals("down") && originalOKDirection.equals("up")) ||
+													(yellow.getDirection().equals("up") && originalOKDirection.equals("down")) ||
+															(yellow.getDirection().equals("left") && originalOKDirection.equals("right")) ||
+															(yellow.getDirection().equals("down") && originalOKDirection.equals("up"))){
+												
+											}
+											else{
+												yellow.setPosition(oldX, oldY);
+												yellow.setLastDirection(newDirection);
+												foundGoodDirection = true;
+												break;
+											}
+										}
+										
+										yellow.setPosition(oldX, oldY);
+										
+									}
+									if (foundGoodDirection == false){
+										yellow.setDirection(originalOKDirection);
+									}
+									
+								}
+								else{
+									String newDirection;
+									//yellow.directionSwitched = false;
+									//randomize direction
+									List<String> directions = new ArrayList<String>();
+									int index = 0;
+									if (!yellow.getDirection().equals("up")){
+										directions.add("up");
+										index++;
+									}
+									if (!yellow.getDirection().equals("left")){
+										directions.add("left");
+										index++;
+									}
+									if (!yellow.getDirection().equals("down")){
+										directions.add("down");
+										index++;
+									}
+									if (!yellow.getDirection().equals("right")){
+										directions.add("right");
+										index++;
+									}
+									
+									int randomNum = rand.nextInt(3);
+									newDirection = directions.get(randomNum);
+									
+									yellow.setDirection(newDirection);
+									yellow.move();
+									if (GameBoard.isBlocked(yellow)){
+										yellow.setPosition(oldX, oldY);
+										directions.remove(randomNum);
+										
+										randomNum = rand.nextInt(2);
+										newDirection = directions.get(randomNum);
+										yellow.setDirection(newDirection);
+										yellow.move();
+										
+										if (GameBoard.isBlocked(yellow)){
+											yellow.setPosition(oldX, oldY);
+											directions.remove(randomNum);
+											
+											randomNum = rand.nextInt(1);
+											newDirection = directions.get(randomNum);
+											yellow.setDirection(newDirection);
+											yellow.move();
+											
+											if (GameBoard.isBlocked(yellow)){
+												yellow.setPosition(oldX, oldY);
+												
+											}
+										}									
+									}
+								
+									yellow.setPosition(oldX, oldY);
+								
+								}
+								yellow.setLastDirection(yellow.getDirection());
+								
+							}
+							
 							//synchronized(yellow.getCondition()){
 		
 									//System.out.println("yellow awaiting...");

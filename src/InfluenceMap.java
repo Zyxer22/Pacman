@@ -71,7 +71,7 @@ public class InfluenceMap {
 	}
 	
 	public static float averageIt(int i, int j){
-		float a = 0.25f*(influenceMap[i+1][j]+influenceMap[i-1][j]
+		float a = 0.5f*(influenceMap[i+1][j]+influenceMap[i-1][j]
 					+influenceMap[i][j+1]+influenceMap[i][j-1]);
 		
 		/*
@@ -88,7 +88,7 @@ public class InfluenceMap {
 		for(int i = 1; i < 30; i++){
 			for(int j = 1; j < influenceMap[i].length-2; j++){
 				if (influenceMap[i][j] != 0){
-					a = 0.25f*(influenceMap[i+1][j]+influenceMap[i-1][j]
+					a = 0.5f*(influenceMap[i+1][j]+influenceMap[i-1][j]
 					+influenceMap[i][j+1]+influenceMap[i][j-1]);
 					
 					influenceMap[i][j] = a;
@@ -121,11 +121,22 @@ public class InfluenceMap {
 						tempMax = Math.max(up, down);
 						tempMax = Math.max(tempMax, left);
 						tempMax = Math.max(tempMax, right);*/
-						bufferMap[i][j] = averageIt(i,j);
+						if (i >= 12 && i <= 16 && j >= 10 && j <= 17){
+							bufferMap[i][j] = 0.0f;
+						}
+						else{
+							bufferMap[i][j] = averageIt(i,j);
+						}
 						//bufferMap[i][j] = lerp(tempMax, influenceMap[i][j], 0.95f);
 					}
 				}
-		}
+			}
+			
+			for(int i = 1; i < 30; i++){
+				for(int j = 1; j < bufferMap[i].length-2; j++){
+					bufferMap[i][j] = bufferMap[i][j] * 0.8f;
+				}
+				}
 		
 		//System.out.println("Influence Map Changed");
 		influenceMap = bufferMap;
