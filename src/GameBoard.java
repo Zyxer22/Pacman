@@ -112,6 +112,11 @@ public class GameBoard {
 				if (ghost.getPathReady().get() == true ){
 					if(ghost.getState().equals("eaten")){
 						eyeRoll(ghost);
+						if(ghost.atHome()){
+							ghost.setStateChasing();
+							ghost.doReset.set(true);
+							//put ghost to sleep?
+						}
 					}
 					System.out.println(ghost.getType()+"\tX: "+ghost.getX()+"\tY: "+ghost.getY());
 					ghost.move();
@@ -212,18 +217,10 @@ public class GameBoard {
 		int x = (int)ghost.getX();
 		int y = (int)ghost.getY();
 
-		if(x < 127 && (y == 26 || y == 106 || y == 166 || y == 406 || y == 526)){
+		if(x <= 127 && (y == 26 || y == 106 || y == 166 || y == 406 || y == 526)){
 			ghost.setDirection("right");
 		}
-		else if(x == 127 && (y == 106)){
-			ghost.setX(137);
-			ghost.setY(106);
-		}
-		else if(x == 427 && y == 106){
-			ghost.setX(137);
-			ghost.setY(106);
-		}
-		else if(x > 427 && (y == 26 || y == 106 || y == 166 || y == 406 || y == 526)){
+		else if(x >= 427 && (y == 26 || y == 106 || y == 166 || y == 406 || y == 526)){
 			ghost.setDirection("left");
 		}
 		else if(x > 127 && x < 247){

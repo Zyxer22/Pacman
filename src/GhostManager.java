@@ -181,6 +181,7 @@ public class GhostManager {
 								red.setIsBlocked(false);
 								red.doReset.set(false);
 								red.setStateChasing();
+								//Thread.sleep(red.putToSleep(2));
 								//red.doReset.set(false);
 							}
 							else{
