@@ -37,6 +37,7 @@ public class Ghost implements Entity{
 	private boolean blocked = false;
 	public AtomicBoolean doReset = new AtomicBoolean(true);
 	public boolean directionSwitched = false;
+	private boolean gameRunning = true;
 	
 	public Ghost(Image[] sprites, String type, float x, float y, String state){
 		position = new Position(x, y);
@@ -189,6 +190,13 @@ public class Ghost implements Entity{
 	public String getDirection(){
 		return direction;
 	}
+	public boolean isGameRunning() {
+		return gameRunning;
+	}
+
+	public void setGameRunning(boolean y) {
+		gameRunning = y;
+	}
 	
 	public void updateCurrentAnimation(){
 		if (direction.equals("left") && (state.equals("chasing") || state.equals("running") || state.equals("starting"))){
@@ -304,23 +312,56 @@ public class Ghost implements Entity{
 		float curX, curY;
 		curX = getX();
 		curY = getY();
-		if (getDirection().equals("left") && !isAsleep()){
+		if(getState().equals("eaten")){
+			move2();
+			return;
+		}
+		else{
+			if (getDirection().equals("left") && !isAsleep()){
+				curX -= GameBoard.tileLength/4;
+				setX(curX);
+			}
+			else if (getDirection().equals("right") && !isAsleep()){
+				curX += GameBoard.tileLength/4;
+				setX(curX);
+			}
+			else if (getDirection().equals("up") && !isAsleep()){
+				curY -= GameBoard.tileLength/4;
+				setY(curY);
+			}
+			else if (getDirection().equals("down") && !isAsleep()){
+				curY += GameBoard.tileLength/4;
+				setY(curY);
+			}
+		}
+		updateCenter();
+	}
+	
+	public void move2(){
+		System.out.println("move2");
+		float curX, curY;
+		curX = getX();
+		curY = getY();
+		String s = eyeRoll(this);
+		if (s.equals("") && !isAsleep()){
+			return;
+		}
+		else if (s.equals("left") && !isAsleep()){
 			curX -= GameBoard.tileLength/4;
 			setX(curX);
 		}
-		else if (getDirection().equals("right") && !isAsleep()){
+		else if (s.equals("right") && !isAsleep()){
 			curX += GameBoard.tileLength/4;
 			setX(curX);
 		}
-		else if (getDirection().equals("up") && !isAsleep()){
+		else if (s.equals("up") && !isAsleep()){
 			curY -= GameBoard.tileLength/4;
 			setY(curY);
 		}
-		else if (getDirection().equals("down") && !isAsleep()){
+		else if (s.equals("down") && !isAsleep()){
 			curY += GameBoard.tileLength/4;
 			setY(curY);
 		}
-		updateCenter();
 	}
 
 	@Override
@@ -396,4 +437,148 @@ public class Ghost implements Entity{
 			return true;
 		else return false;
 	}
-}
+	
+	public String eyeRoll(Ghost ghost){
+		int x = (int)ghost.getX();
+		int y = (int)ghost.getY();
+		
+		String ret = "left";
+		if(x < 247){
+			ret = "right";
+		}
+		else if(x > 307 ){
+			ret = "left";
+		}
+		else if(y > 286){
+			ret = "up";
+		}
+		else if(y < 286){
+			ret = "down";
+		}
+		if (x < 27 || x > 547 || y== 286){
+			ghost.setX(260);
+			ghost.setY(290);
+			ghost.setStateChasing();
+			ghost.doReset.set(true);
+			return "";
+		}
+		else if (y < 27 || y > 586){
+			ghost.setX(260);
+			ghost.setY(290);
+			ghost.doReset.set(true);
+			return "";
+		}
+		return ret;
+	}
+		
+	
+/*	public String eyeRoll(Ghost ghost){
+		int x = (int)ghost.getX();
+		int y = (int)ghost.getY();
+
+		if(x <= 127 && (y == 26 || y == 106 || y == 166 || y == 406 || y == 526)){
+			return ("right");
+		}
+		else if(x >= 427 && (y == 26 || y == 106 || y == 166 || y == 406 || y == 526)){
+			return ("left");
+		}
+		else if(x > 127 && x < 247){
+			return ("left");
+		}
+		else if( x > 307 && x < 427){
+			return ("right");
+		}
+		else if( y < 106 && (x == 127 || x == 427)){
+			return ("up");
+		}
+		else if( y < 106 && ( x == 247 || x == 307)){
+			return ("down");
+		}
+		else if((y >= 106 && y < 166) && (x == 187 || x == 307)){
+			return ("down");
+		}
+		else if( y == 166 && (x >= 187 && x < 247)){
+			return ("right");
+		}
+		else if( y == 166 && (x > 307 && x <= 367)){
+			return ("left");
+		}
+		else if((x == 307 || x == 247) && (y < 226 && y >= 166)){
+			return ("down");
+		}
+		else if( y == 106 && x <= 127){
+			return ("right");
+		}
+		else if(y == 106 && !(x == 187 || x == 367)){
+			return ("left");
+		}
+		else if( (x == 127 || x == 427) && y <=527){
+			return ("up");
+		}
+		else if(x < 427 && y == 466){
+			return ("left");
+		}
+		else if(y == 586 && x != 27 && x != 527){
+			return ("left");
+		}
+		else if((x == 27 || x == 527) && (y <= 586 && y > 526)){
+			return ("up");
+		}
+		else if( (y <= 406 && y >466) && (x == 466 || x == 406)){
+			return ("down");
+		}
+		else if( y == 406 && (x <= 247 && x > 127)){
+			return ("left");
+		}
+		else if( y  == 406 && (x >= 307 && x < 427)){
+			return ("right");
+		}
+		else if(x == 527 && ( y <= 466 && y > 406)){
+			return ("up");
+		}
+		else if(x == 27 &&  ( y <= 466 && y > 406)){
+			return ("up");
+		}
+		else if((x == 487 || x == 67) && (y < 526 && y > 466)){
+			return ("up");
+		}
+		else if( (x < 67 && x > 27) && y == 466){
+			return ("left");
+		}
+		else if( (x < 527 && x > 487) && y == 466){
+			return ("right");
+		}
+		else if( (x == 307 || x == 247) && (y <586 && y >=526)){
+			return ("down");
+		}
+		else if( y == 526 && (x < 247 && x > 187)){
+			return ("left");
+		}
+		else if( y == 526 && (x > 307 && x < 367)){
+			return ("right");
+		}
+		else if( (x == 367 || x == 187) && (y <=526 && y > 466)){
+			return ("up");
+		}
+		else if( y == 286 && (x > 367 && x < 427)){
+			return ("right");
+		}
+		else if( y == 286 && (x < 187 && x > 127)){
+			return ("left");
+		}
+		else if(y == 346 && (x < 367 && x > 187)){
+			return ("left");
+		}
+		else if(x == 187 || x == 367){
+			return ("up");
+		}
+		else if(y == 226 && (x <=367 && x > 287)){
+			return ("left");
+		}
+		else if(y == 226 && (x >= 187 && x < 287)){
+			return ("right");
+		}
+		else return ("down");
+	}
+	
+*/}
