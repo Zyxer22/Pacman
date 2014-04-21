@@ -188,6 +188,7 @@ public class GhostManager {
 								red.setIsBlocked(false);
 								red.doReset.set(false);
 								red.setStateChasing();
+								red.setDirectionLeft();
 								//Thread.sleep(red.putToSleep(2));
 								//red.doReset.set(false);
 							}
@@ -227,7 +228,16 @@ public class GhostManager {
 									
 									
 									//if (GameBoard.rand.nextInt(100) <= 98){
-										choosePath(red);
+										String direction = pathDirectionLookAhead(red);
+										if (GameBoard.directionIsOpposite(direction, red.getDirection())){
+											String curDirection = red.getDirection();
+											direction = GameBoard.getRandomJunctionDirection(red.getX(), red.getY(), numCorridors, curDirection);
+											red.setDirection(direction);
+										}
+										else{
+											choosePath(red);
+										}
+										
 									//}
 									
 									
@@ -444,6 +454,7 @@ public class GhostManager {
 								pink.setIsBlocked(false);
 								pink.doReset.set(false);
 								pink.setStateChasing();
+								pink.setDirectionRight();
 								//pink.doReset.set(false);
 							}
 							else{
@@ -480,11 +491,20 @@ public class GhostManager {
 								numCorridors = GameBoard.getJunctionCount(pink.getX(), pink.getY());
 								if (numCorridors >= 3){
 									if (GameBoard.rand.nextInt(100) <= 89){
-										choosePath(pink);
+										String direction = pathDirectionLookAhead(pink);
+										if (GameBoard.directionIsOpposite(direction, pink.getDirection())){
+											String curDirection = pink.getDirection();
+											direction = GameBoard.getRandomJunctionDirection(pink.getX(), pink.getY(), numCorridors, curDirection);
+											pink.setDirection(direction);
+										}
+										else{
+											choosePath(pink);
+										}
 									}
 									else{
 									//choose direction at random
-										String direction = GameBoard.getRandomJunctionDirection(pink.getX(), pink.getY(), numCorridors);
+										String curDirection = pink.getDirection();
+										String direction = GameBoard.getRandomJunctionDirection(pink.getX(), pink.getY(), numCorridors, curDirection);
 										pink.setDirection(direction);
 									
 									}
@@ -698,6 +718,7 @@ public class GhostManager {
 								blue.setIsBlocked(false);
 								blue.doReset.set(false);
 								blue.setStateChasing();
+								blue.setDirectionLeft();
 								//blue.doReset.set(false);
 							}
 							else{
@@ -733,12 +754,21 @@ public class GhostManager {
 								int numCorridors = 0;
 								numCorridors = GameBoard.getJunctionCount(blue.getX(), blue.getY());
 								if (numCorridors >= 3){
-									if (GameBoard.rand.nextInt(100) <= 89){
-										choosePath(blue);
+									if (GameBoard.rand.nextInt(100) <= 79){
+										String direction = pathDirectionLookAhead(blue);
+										if (GameBoard.directionIsOpposite(direction, blue.getDirection())){
+											String curDirection = blue.getDirection();
+											direction = GameBoard.getRandomJunctionDirection(blue.getX(), blue.getY(), numCorridors, curDirection);
+											blue.setDirection(direction);
+										}
+										else{
+											choosePath(blue);
+										}
 									}
 									else{
 									//choose direction at random
-										String direction = GameBoard.getRandomJunctionDirection(blue.getX(), blue.getY(), numCorridors);
+										String curDirection = blue.getDirection();
+										String direction = GameBoard.getRandomJunctionDirection(blue.getX(), blue.getY(), numCorridors, curDirection);
 										blue.setDirection(direction);
 									
 									}
@@ -950,6 +980,7 @@ public class GhostManager {
 								yellow.setIsBlocked(false);
 								yellow.doReset.set(false);
 								yellow.setStateChasing();
+								yellow.setDirectionRight();
 								//yellow.doReset.set(false);
 							}
 							else{
@@ -990,7 +1021,8 @@ public class GhostManager {
 									}
 									else{
 									//choose direction at random
-										String direction = GameBoard.getRandomJunctionDirection(yellow.getX(), yellow.getY(), numCorridors);
+										String curDirection = yellow.getDirection();
+										String direction = GameBoard.getRandomJunctionDirection(yellow.getX(), yellow.getY(), numCorridors, curDirection);
 										yellow.setDirection(direction);
 									
 									}
@@ -1250,7 +1282,54 @@ public class GhostManager {
 		  		
 		  	}
 	
-		public  String chooseOrbPath(Ghost ghost, List<String> validStrings){
+public String pathDirectionLookAhead(Ghost ghost){
+		
+		//get current position
+		  		int y = (int) (ghost.getX()/20);
+		  		int x = (int) (ghost.getY()/20);
+		  		
+		  		//System.out.println("Choosing path for ghost " + ghost.getType());
+		  		//get the direction influences
+		  		
+		  		
+		  		float left = influenceMapLocksmith.getInfluenceMap()[x][y -  1];
+		  		float right = influenceMapLocksmith.getInfluenceMap()[x][y + 1];
+		  		float up = influenceMapLocksmith.getInfluenceMap()[x -  1][y];
+		  		float down = influenceMapLocksmith.getInfluenceMap()[x + 1][y];
+		  		
+		  		//get highest weight with bias towards up,right,left,down
+		  		if( up >= right &&
+		  			up >= left &&
+		  			up >= down){
+		  				return "up";
+		  				
+		  		}
+		  		else if( right >= left &&
+		  				 right >= up &&
+		  				 right >= down){
+		  				return "right";
+		  		}
+		  		else if( left >= right &&
+		  				 left >= up &&
+		  				 left >= down){
+		  					//System.out.println("left = " + left + "(x, y) = (" + x + ", " + y + ")");
+		  				return "left";
+		  		}
+		  		else if( down >= right &&
+		  				 down >= left &&
+		  				 down >= up){
+		  				
+		  					return "down";
+		  		}
+		  		
+		  		return "up";
+		  			//ghost.getPathReady().set(true);
+		  			//System.out.println(ghost.getType() + " pathReady True");
+		  			
+		  		
+		  	}	
+	
+	public  String chooseOrbPath(Ghost ghost, List<String> validStrings){
 			return null;
 		}
 		

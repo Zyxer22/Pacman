@@ -183,6 +183,7 @@ public class Ghost implements Entity{
 	}
 	
 	public void setDirection(String direction){
+		//this.direction = new String(direction);
 		this.direction = direction;
 		updateCurrentAnimation();
 	}

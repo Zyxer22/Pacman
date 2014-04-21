@@ -28,7 +28,7 @@ public class InfluenceMapLocksmith {
 		pmY = pm.getY();
 		
 		if (pmX == lastPacmanX & pmY == lastPacmanY){
-			return;
+			//return;
 		}
 		
 		lastPacmanX = pmX;

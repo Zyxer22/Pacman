@@ -143,33 +143,38 @@ public class GameBoard {
 				(int) (entity.getY() / 10), 0);
 	}
 	
-	public static String getRandomJunctionDirection(float x, float y, int numCorridors){
+	public static String getRandomJunctionDirection(float x, float y, int numCorridors, String curDirection){
 		String[] directions = new String[numCorridors];
-		int randomNum = rand.nextInt(numCorridors);
+		
 		
 		int index = 0;
-		if (!isBlocked(x+5, y)){
+		if (!isBlocked(x+5, y) && !directionIsOpposite(curDirection, "right")){
 			directions[index] = "right";
 			index++;
 		}
 		
-		if (!isBlocked(x-5, y)){
+		if (!isBlocked(x-5, y) && !directionIsOpposite(curDirection, "left")){
 			directions[index] = "left";
 			index++;
 		}
 		
-		if (!isBlocked(x, y+5)){
-			if ((y < 240 || y >= 320) && (x < 200 || x >= 340)){
+		if (!isBlocked(x, y+5) && !directionIsOpposite(curDirection, "down")){
+			if ((y < 240 || y >= 320) || (x < 200 || x >= 340)){
 				directions[index] = "down";
 				index++;
 			}
 		}
 		
-		if (!isBlocked(x, y-5)){
+		if (!isBlocked(x, y-5) && !directionIsOpposite(curDirection, "up")){
 			directions[index] = "up";
 			index++;
 		}
 		
+		if (index == 0){
+			return curDirection;
+		}
+		
+		int randomNum = rand.nextInt(index);
 		String direction = directions[randomNum];
 		return direction;
 		
@@ -317,6 +322,27 @@ public class GameBoard {
 			}
 		}
 
+		return false;
+	}
+	
+	public static boolean directionIsOpposite(String direction1, String direction2){
+		
+		if (direction1.equals("up") && direction2.equals("down")){
+			return true;
+		}
+		
+		if (direction1.equals("left") && direction2.equals("right")){
+			return true;
+		}
+		
+		if (direction1.equals("down") && direction2.equals("up")){
+			return true;
+		}
+		
+		if (direction1.equals("right") && direction2.equals("left")){
+			return true;
+		}
+		
 		return false;
 	}
 
