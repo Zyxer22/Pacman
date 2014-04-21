@@ -159,8 +159,10 @@ public class GameBoard {
 		}
 		
 		if (!isBlocked(x, y+5)){
-			directions[index] = "down";
-			index++;
+			if ((y < 240 || y >= 320) && (x < 200 || x >= 340)){
+				directions[index] = "down";
+				index++;
+			}
 		}
 		
 		if (!isBlocked(x, y-5)){
@@ -188,7 +190,9 @@ public class GameBoard {
 		}
 		
 		if (!isBlocked(x, y+5)){
-			corridorCount++;
+			if ((y < 240 || y >= 320) && (x < 200 || x >= 340)){
+				corridorCount++;
+			}
 		}
 		
 		if (!isBlocked(x, y-5)){

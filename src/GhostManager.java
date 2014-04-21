@@ -221,10 +221,27 @@ public class GhostManager {
 								red.setIsBlocked(false);
 							}
 							if (red.getState().equals("chasing") || red.getState().equals("running")){
-								Position lookAheadMove = red.virtualMove();
-								if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
-									choosePath(red);
+								int numCorridors = 0;
+								numCorridors = GameBoard.getJunctionCount(red.getX(), red.getY());
+								if (numCorridors >= 3){
+									
+									
+									//if (GameBoard.rand.nextInt(100) <= 98){
+										choosePath(red);
+									//}
+									
+									
+									
+									//yellow.setDirection(direction);
 								}
+								else{
+									Position lookAheadMove = red.virtualMove();
+									if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+										choosePath(red);
+									}
+								}
+								
+								//helper for orb mode
 								red.directionSwitched = false;
 							}
 							else if (red.getState().equals("orb") || red.getState().equals("flashing")){
@@ -459,10 +476,27 @@ public class GhostManager {
 								pink.setIsBlocked(false);
 							}
 							if (pink.getState().equals("chasing") || pink.getState().equals("running")){
-								Position lookAheadMove = pink.virtualMove();
-								if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
-									choosePath(pink);
+								int numCorridors = 0;
+								numCorridors = GameBoard.getJunctionCount(pink.getX(), pink.getY());
+								if (numCorridors >= 3){
+									if (GameBoard.rand.nextInt(100) <= 89){
+										choosePath(pink);
+									}
+									else{
+									//choose direction at random
+										String direction = GameBoard.getRandomJunctionDirection(pink.getX(), pink.getY(), numCorridors);
+										pink.setDirection(direction);
+									
+									}
 								}
+								else{
+									Position lookAheadMove = pink.virtualMove();
+									if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+										choosePath(pink);
+									}
+								}
+								
+								//helper for orb mode
 								pink.directionSwitched = false;
 							}
 							else if (pink.getState().equals("orb") || pink.getState().equals("flashing")){
@@ -696,10 +730,27 @@ public class GhostManager {
 								blue.setIsBlocked(false);
 							}
 							if (blue.getState().equals("chasing") || blue.getState().equals("running")){
-								Position lookAheadMove = blue.virtualMove();
-								if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
-									choosePath(blue);
+								int numCorridors = 0;
+								numCorridors = GameBoard.getJunctionCount(blue.getX(), blue.getY());
+								if (numCorridors >= 3){
+									if (GameBoard.rand.nextInt(100) <= 89){
+										choosePath(blue);
+									}
+									else{
+									//choose direction at random
+										String direction = GameBoard.getRandomJunctionDirection(blue.getX(), blue.getY(), numCorridors);
+										blue.setDirection(direction);
+									
+									}
 								}
+								else{
+									Position lookAheadMove = blue.virtualMove();
+									if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+										choosePath(blue);
+									}
+								}
+								
+								//helper for orb mode
 								blue.directionSwitched = false;
 							}
 							else if (blue.getState().equals("orb") || blue.getState().equals("flashing")){
@@ -934,10 +985,15 @@ public class GhostManager {
 								int numCorridors = 0;
 								numCorridors = GameBoard.getJunctionCount(yellow.getX(), yellow.getY());
 								if (numCorridors >= 3){
+									if (GameBoard.rand.nextInt(100) <= 29){
+										choosePath(yellow);
+									}
+									else{
 									//choose direction at random
-									//String direction = GameBoard.getRandomJunctionDirection(yellow.getX(), yellow.getY(), numCorridors);
-									choosePath(yellow);
-									//yellow.setDirection(direction);
+										String direction = GameBoard.getRandomJunctionDirection(yellow.getX(), yellow.getY(), numCorridors);
+										yellow.setDirection(direction);
+									
+									}
 								}
 								else{
 									Position lookAheadMove = yellow.virtualMove();
