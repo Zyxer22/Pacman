@@ -122,6 +122,7 @@ public class InfluenceMap {
 						tempMax = Math.max(tempMax, left);
 						tempMax = Math.max(tempMax, right);*/
 						if (i >= 12 && i <= 16 && j >= 10 && j <= 17){
+							//prevents influence from affecting ghost home
 							bufferMap[i][j] = 0.0f;
 						}
 						else{
