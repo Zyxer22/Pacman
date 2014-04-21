@@ -119,11 +119,7 @@ public class GameBoard {
 			} else if (entity.getClass().getName().equals("Ghost")) {
 				Ghost ghost = (Ghost) entity;
 				if (ghost.getPathReady().get() == true) {
-/*					System.out.println(ghost.getType() + "\tX: " + ghost.getX()
-							+ "\tY: " + ghost.getY());*/
 					ghost.move();
-/*					System.out.println(ghost.getType() + "New X: "
-							+ ghost.getX() + "\tNew Y: " + ghost.getY());*/
 					if (isBlocked(entity)) {
 						entity.setPosition(oldX, oldY);
 					}

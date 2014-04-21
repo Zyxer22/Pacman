@@ -27,8 +27,8 @@ public class GhostManager {
 	public void initializeGhosts(SpriteManager sm){
 		ghosts[0] = new Ghost(sm.getRedGhostSprites(), "red", 260, 290, "starting");
 		ghosts[1] = new Ghost(sm.getPinkGhostSprites(), "pink", 260, 310, "starting");
-		ghosts[2] = new Ghost(sm.getBlueGhostSprites(), "blue", 280, 310, "starting");
-		ghosts[3] = new Ghost(sm.getYellowGhostSprites(), "yellow", 280, 290, "starting");
+		ghosts[2] = new Ghost(sm.getBlueGhostSprites(), "blue", 280, 290, "starting");
+		ghosts[3] = new Ghost(sm.getYellowGhostSprites(), "yellow", 280, 310, "starting");
 	}
 	
 /*==================================================*
@@ -105,17 +105,21 @@ public class GhostManager {
 		getYellowGhost().setStateStarting();
 		getPinkGhost().setStateStarting();
 		getRedGhost().sleep();
-		getRedGhost().doReset.set(true);
+		
 		getBlueGhost().sleep();
-		getBlueGhost().doReset.set(true);
+		
 		getYellowGhost().sleep();
-		getYellowGhost().doReset.set(true);
+		
 		getPinkGhost().sleep();
-		getPinkGhost().doReset.set(true);
+		
 		getBlueGhost().setIsBlocked(false);
 		getRedGhost().setIsBlocked(false);
 		getPinkGhost().setIsBlocked(false);
 		getYellowGhost().setIsBlocked(false);
+		getRedGhost().doReset.set(true);
+		getBlueGhost().doReset.set(true);
+		getYellowGhost().doReset.set(true);
+		getPinkGhost().doReset.set(true);
 		
 		//setGhostsChasing();
 		
@@ -128,11 +132,11 @@ public class GhostManager {
 		getPinkGhost().updateCenter();
 		
 		getBlueGhost().setX(280);
-		getBlueGhost().setY(310);
+		getBlueGhost().setY(290);
 		
 		getBlueGhost().updateCenter();
 		getYellowGhost().setX(280);
-		getYellowGhost().setY(290);
+		getYellowGhost().setY(310);
 		
 		getYellowGhost().updateCenter();
 		getRedGhost().wake();
@@ -167,28 +171,34 @@ public class GhostManager {
 	Thread redLogic = new Thread() {
 		public void run() {
 	        Ghost red = getRedGhost();
+	        boolean wakeToggle = true;
 	        if(red.isAsleep())
 				try {
-					Thread.sleep(red.putToSleep(0));
+					Thread.sleep(red.putToSleep(1));
 					red.wake();
 					List<String> validStrings = new ArrayList<String>();
 					
 					while(true){
 						while (red.isAsleep()){
-							Thread.sleep(red.putToSleep(0));
-							
+							Thread.sleep(red.putToSleep(1));
+							wakeToggle = true;
 						}
 						
-						getPinkGhost().wake();
+						if (wakeToggle){
+							getPinkGhost().wake();
+							wakeToggle = false;
+						}
 						
 						if (red.doReset.get() == true){
 							if (red.isBlocked()){
 								red.setPosition(262.0f, 226.0f);
 								System.out.println("position: " + red.getX() + ", " + red.getY());
 								red.setIsBlocked(false);
-								red.doReset.set(false);
+								
 								red.setStateChasing();
 								red.setDirectionLeft();
+								red.doReset.set(false);
+								wakeToggle = true;
 								//Thread.sleep(red.putToSleep(2));
 								//red.doReset.set(false);
 							}
@@ -343,7 +353,6 @@ public class GhostManager {
 									//System.out.println("red awaiting...");
 									red.lock();
 									red.getPathReady().set(true);
-									//System.out.println("red Condition Hashcode: " + red.getCondition().hashCode());
 									red.await();
 									//System.out.println("red awake...");
 	
@@ -364,28 +373,34 @@ public class GhostManager {
 	Thread pinkLogic = new Thread() {
 		public void run() {
 	        Ghost pink = getPinkGhost();
+	        boolean wakeToggle = false;
 	        if(pink.isAsleep())
 	        	try {
-					Thread.sleep(pink.putToSleep(10));
-					pink.wake();
+					Thread.sleep(pink.putToSleep(9));
+					//pink.wake();
 					List<String> validStrings = new ArrayList<String>();
 					
 					while(true){
 						while (pink.isAsleep()){
 							Thread.sleep(pink.putToSleep(10));
 							
+							
 						}
 						
-						getBlueGhost().wake();
-						
-						if (pink.doReset.get() == true){
+						if (wakeToggle){
+							getBlueGhost().wake();
+							wakeToggle = false;
+						}
+						if (pink.doReset.get() == true && !pink.isAsleep()){
 							if (pink.isBlocked()){
 								pink.setPosition(262.0f, 226.0f);
 								System.out.println("position: " + pink.getX() + ", " + pink.getY());
 								pink.setIsBlocked(false);
-								pink.doReset.set(false);
+								
 								pink.setStateChasing();
 								pink.setDirectionRight();
+								pink.doReset.set(false);
+								wakeToggle = true;
 								//pink.doReset.set(false);
 							}
 							else{
@@ -551,28 +566,33 @@ public class GhostManager {
 	Thread blueLogic = new Thread() {
 		public void run() {
 	        Ghost blue = getBlueGhost();
+	        boolean wakeToggle = false;
 	        if(blue.isAsleep())
 	        	try {
 					Thread.sleep(blue.putToSleep(20));
-					blue.wake();
+					//blue.wake();
 					List<String> validStrings = new ArrayList<String>();
 					
 					while(true){
 						while (blue.isAsleep()){
-							Thread.sleep(blue.putToSleep(10));
+							Thread.sleep(blue.putToSleep(20));
 							
 						}
 						
-						getYellowGhost().wake();
-						
-						if (blue.doReset.get() == true){
+						if (wakeToggle){
+							getYellowGhost().wake();
+							wakeToggle = false;
+						}
+						if (blue.doReset.get() == true && !blue.isAsleep()){
 							if (blue.isBlocked()){
 								blue.setPosition(282.0f, 226.0f);
 								System.out.println("position: " + blue.getX() + ", " + blue.getY());
 								blue.setIsBlocked(false);
-								blue.doReset.set(false);
+								
 								blue.setStateChasing();
 								blue.setDirectionLeft();
+								blue.doReset.set(false);
+								wakeToggle = true;
 								//blue.doReset.set(false);
 							}
 							else{
@@ -739,23 +759,24 @@ public class GhostManager {
 	        if(yellow.isAsleep())
 	        	try {
 					Thread.sleep(yellow.putToSleep(30));
-					yellow.wake();
+					//yellow.wake();
 					List<String> validStrings = new ArrayList<String>();
 					
 					while(true){
 						while (yellow.isAsleep()){
-							Thread.sleep(yellow.putToSleep(10));
+							Thread.sleep(yellow.putToSleep(30));
 							
 						}
 						
-						if (yellow.doReset.get() == true){
+						if (yellow.doReset.get() == true && !yellow.isAsleep()){
 							if (yellow.isBlocked()){
 								yellow.setPosition(282.0f, 226.0f);
 								System.out.println("position: " + yellow.getX() + ", " + yellow.getY());
 								yellow.setIsBlocked(false);
-								yellow.doReset.set(false);
+								
 								yellow.setStateChasing();
 								yellow.setDirectionRight();
+								yellow.doReset.set(false);
 								//yellow.doReset.set(false);
 							}
 							else{
