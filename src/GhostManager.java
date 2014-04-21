@@ -1036,6 +1036,9 @@ public String pathDirectionLookAhead(Ghost ghost){
 	  		}
 	  		
 	  		//choose one at random
+	  		if (tieValues.size() == 0){
+	  			return ghost.getDirection();
+	  		}
 	  		int randomVal = GameBoard.rand.nextInt(tieValues.size());
 	  		return tieValues.get(randomVal);
 	  		
