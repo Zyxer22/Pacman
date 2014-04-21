@@ -337,6 +337,35 @@ public class Ghost implements Entity{
 		updateCenter();
 	}
 	
+	public synchronized Position virtualMove() {
+		float curX, curY;
+		curX = getX();
+		curY = getY();
+		
+		
+			if (getDirection().equals("left") && !isAsleep()){
+				curX -= GameBoard.tileLength/4;
+				
+			}
+			else if (getDirection().equals("right") && !isAsleep()){
+				curX += GameBoard.tileLength/4;
+				
+			}
+			else if (getDirection().equals("up") && !isAsleep()){
+				curY -= GameBoard.tileLength/4;
+				
+			}
+			else if (getDirection().equals("down") && !isAsleep()){
+				curY += GameBoard.tileLength/4;
+				;
+			}
+			
+			return new Position(curX, curY);
+		}
+		
+	
+	
+	
 	public void move2(){
 		System.out.println("move2");
 		float curX, curY;

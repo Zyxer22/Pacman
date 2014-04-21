@@ -221,7 +221,10 @@ public class GhostManager {
 								red.setIsBlocked(false);
 							}
 							if (red.getState().equals("chasing") || red.getState().equals("running")){
-								choosePath(red);
+								Position lookAheadMove = red.virtualMove();
+								if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+									choosePath(red);
+								}
 								red.directionSwitched = false;
 							}
 							else if (red.getState().equals("orb") || red.getState().equals("flashing")){
@@ -456,7 +459,10 @@ public class GhostManager {
 								pink.setIsBlocked(false);
 							}
 							if (pink.getState().equals("chasing") || pink.getState().equals("running")){
-								choosePath(pink);
+								Position lookAheadMove = pink.virtualMove();
+								if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+									choosePath(pink);
+								}
 								pink.directionSwitched = false;
 							}
 							else if (pink.getState().equals("orb") || pink.getState().equals("flashing")){
@@ -690,7 +696,10 @@ public class GhostManager {
 								blue.setIsBlocked(false);
 							}
 							if (blue.getState().equals("chasing") || blue.getState().equals("running")){
-								choosePath(blue);
+								Position lookAheadMove = blue.virtualMove();
+								if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+									choosePath(blue);
+								}
 								blue.directionSwitched = false;
 							}
 							else if (blue.getState().equals("orb") || blue.getState().equals("flashing")){
@@ -922,7 +931,10 @@ public class GhostManager {
 								yellow.setIsBlocked(false);
 							}
 							if (yellow.getState().equals("chasing") || yellow.getState().equals("running")){
-								choosePath(yellow);
+								Position lookAheadMove = yellow.virtualMove();
+								if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+									choosePath(yellow);
+								}
 								yellow.directionSwitched = false;
 							}
 							else if (yellow.getState().equals("orb") || yellow.getState().equals("flashing")){

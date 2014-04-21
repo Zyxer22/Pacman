@@ -140,6 +140,40 @@ public class GameBoard {
 		return tm.getTileId((int) (entity.getX() / 10),
 				(int) (entity.getY() / 10), 0);
 	}
+	
+	public static boolean isBlocked(float x, float y) {
+		for (int i = 0; i < tm.getObjectCount(0) - 1; i++) {
+
+			float entX = x;
+			float entY = y;
+			int objX = tm.getObjectX(0, i);
+			int objY = tm.getObjectY(0, i);
+			int objWidth = tm.getObjectWidth(0, i);
+			int objHeight = tm.getObjectHeight(0, i);
+		
+		// offset to allow some passage
+					int tileOffset = 5;
+
+					if ((entX >= objX - tileLength + tileOffset)
+							&& (entX <= (objX + objWidth))) {
+						if ((entY >= objY - tileLength + tileOffset)
+								&& (entY <= (objY + objHeight))) {
+							
+							return true;
+						}
+
+					} else if ((entY >= objY - tileLength + tileOffset)
+							&& (entY <= (objY + objHeight))) {
+						if ((entX >= objX - tileLength + tileOffset)
+								&& (entX <= (objX + objWidth))) {
+							
+							return true;
+						}
+					}
+			}
+		
+		return false;
+	}
 
 	public static boolean isBlocked(Entity entity) {
 		// don't check for gate (ghosts can go through)
