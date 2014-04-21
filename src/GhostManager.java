@@ -308,10 +308,25 @@ public class GhostManager {
 								}
 								else{
 									Position lookAheadMove = red.virtualMove();
+									
+									
 									if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+										String oldDirection = red.getDirection();
 										String direction = getOrbDirection(red);
 										red.setDirection(direction);
+										
+										
+										lookAheadMove = red.virtualMove();
+										if (GameBoard.directionIsOpposite(direction, oldDirection) && !GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+											choosePath(red);
+											lookAheadMove = red.virtualMove();
+											if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+												red.setDirection(direction);
+											}
+										}
 									}
+									
+									
 								}
 								
 								//red.directionSwitched = false;
@@ -490,8 +505,15 @@ public class GhostManager {
 								else{
 									Position lookAheadMove = pink.virtualMove();
 									if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+										String oldDirection = pink.getDirection();
 										String direction = getOrbDirection(pink);
 										pink.setDirection(direction);
+										
+										
+										lookAheadMove = pink.virtualMove();
+										if (GameBoard.directionIsOpposite(direction, oldDirection) && !GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+											choosePath(pink);
+										}
 									}
 								}
 								
@@ -670,8 +692,14 @@ public class GhostManager {
 								else{
 									Position lookAheadMove = blue.virtualMove();
 									if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+										String oldDirection = blue.getDirection();
 										String direction = getOrbDirection(blue);
 										blue.setDirection(direction);
+										
+										lookAheadMove = blue.virtualMove();
+										if (GameBoard.directionIsOpposite(direction, oldDirection) && !GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+											choosePath(blue);
+										}
 									}
 								}
 								
@@ -839,8 +867,14 @@ public class GhostManager {
 								else{
 									Position lookAheadMove = yellow.virtualMove();
 									if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+										String oldDirection = yellow.getDirection();
 										String direction = getOrbDirection(yellow);
 										yellow.setDirection(direction);
+										
+										lookAheadMove = yellow.virtualMove();
+										if (GameBoard.directionIsOpposite(direction, oldDirection) && !GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+											choosePath(yellow);
+										}
 									}
 								}
 								
