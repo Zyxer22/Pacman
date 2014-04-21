@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -21,6 +22,7 @@ public class GameBoard {
 	List<Entity> entities;
 	static TiledMap tm;
 	InfluenceMapLocksmith influenceMapLocksmith;
+	static Random rand = new Random();
 
 	public static final String tileMapPath = "/BoardTileMap.tmx";
 	public static final String spritePath = "/background.png";
@@ -139,6 +141,61 @@ public class GameBoard {
 	public int getTileId(Entity entity) {
 		return tm.getTileId((int) (entity.getX() / 10),
 				(int) (entity.getY() / 10), 0);
+	}
+	
+	public static String getRandomJunctionDirection(float x, float y, int numCorridors){
+		String[] directions = new String[numCorridors];
+		int randomNum = rand.nextInt(numCorridors);
+		
+		int index = 0;
+		if (!isBlocked(x+5, y)){
+			directions[index] = "right";
+			index++;
+		}
+		
+		if (!isBlocked(x-5, y)){
+			directions[index] = "left";
+			index++;
+		}
+		
+		if (!isBlocked(x, y+5)){
+			directions[index] = "down";
+			index++;
+		}
+		
+		if (!isBlocked(x, y-5)){
+			directions[index] = "up";
+			index++;
+		}
+		
+		String direction = directions[randomNum];
+		return direction;
+		
+	}
+	
+	
+	public static int getJunctionCount(float x, float y){
+		//provide neutral position, unmoved
+		
+		int corridorCount = 0;
+		
+		if (!isBlocked(x+5, y)){
+			corridorCount++;
+		}
+		
+		if (!isBlocked(x-5, y)){
+			corridorCount++;
+		}
+		
+		if (!isBlocked(x, y+5)){
+			corridorCount++;
+		}
+		
+		if (!isBlocked(x, y-5)){
+			corridorCount++;
+		}
+		
+		return corridorCount;
 	}
 	
 	public static boolean isBlocked(float x, float y) {

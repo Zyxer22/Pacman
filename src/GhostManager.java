@@ -931,10 +931,22 @@ public class GhostManager {
 								yellow.setIsBlocked(false);
 							}
 							if (yellow.getState().equals("chasing") || yellow.getState().equals("running")){
-								Position lookAheadMove = yellow.virtualMove();
-								if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+								int numCorridors = 0;
+								numCorridors = GameBoard.getJunctionCount(yellow.getX(), yellow.getY());
+								if (numCorridors >= 3){
+									//choose direction at random
+									//String direction = GameBoard.getRandomJunctionDirection(yellow.getX(), yellow.getY(), numCorridors);
 									choosePath(yellow);
+									//yellow.setDirection(direction);
 								}
+								else{
+									Position lookAheadMove = yellow.virtualMove();
+									if (GameBoard.isBlocked(lookAheadMove.getX(), lookAheadMove.getY())){
+										choosePath(yellow);
+									}
+								}
+								
+								//helper for orb mode
 								yellow.directionSwitched = false;
 							}
 							else if (yellow.getState().equals("orb") || yellow.getState().equals("flashing")){
