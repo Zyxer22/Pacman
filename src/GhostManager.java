@@ -235,16 +235,20 @@ public class GhostManager {
 								
 								if (red.directionSwitched == false){
 									if (red.getDirection().equals("up")){
+										red.setLastDirection(red.getDirection());
 										red.setDirectionDown();
 									}
 									else if (red.getDirection().equals("down")){
 										red.setDirectionUp();
+										red.setLastDirection(red.getDirection());
 									}
 									else if (red.getDirection().equals("left")){
 										red.setDirectionRight();
+										red.setLastDirection(red.getDirection());
 									}
 									else{
 										red.setDirectionLeft();
+										red.setLastDirection(red.getDirection());
 									}
 									
 									red.directionSwitched = true;
@@ -466,15 +470,19 @@ public class GhostManager {
 								
 								if (pink.directionSwitched == false){
 									if (pink.getDirection().equals("up")){
+										pink.setLastDirection(pink.getDirection());
 										pink.setDirectionDown();
 									}
 									else if (pink.getDirection().equals("down")){
+										pink.setLastDirection(pink.getDirection());
 										pink.setDirectionUp();
 									}
 									else if (pink.getDirection().equals("left")){
+										pink.setLastDirection(pink.getDirection());
 										pink.setDirectionRight();
 									}
 									else{
+										pink.setLastDirection(pink.getDirection());
 										pink.setDirectionLeft();
 									}
 									
@@ -696,15 +704,19 @@ public class GhostManager {
 								
 								if (blue.directionSwitched == false){
 									if (blue.getDirection().equals("up")){
+										blue.setLastDirection(blue.getDirection());
 										blue.setDirectionDown();
 									}
 									else if (blue.getDirection().equals("down")){
+										blue.setLastDirection(blue.getDirection());
 										blue.setDirectionUp();
 									}
 									else if (blue.getDirection().equals("left")){
+										blue.setLastDirection(blue.getDirection());
 										blue.setDirectionRight();
 									}
 									else{
+										blue.setLastDirection(blue.getDirection());
 										blue.setDirectionLeft();
 									}
 									
@@ -924,15 +936,19 @@ public class GhostManager {
 								
 								if (yellow.directionSwitched == false){
 									if (yellow.getDirection().equals("up")){
+										yellow.setLastDirection(yellow.getDirection());
 										yellow.setDirectionDown();
 									}
 									else if (yellow.getDirection().equals("down")){
+										yellow.setLastDirection(yellow.getDirection());
 										yellow.setDirectionUp();
 									}
 									else if (yellow.getDirection().equals("left")){
+										yellow.setLastDirection(yellow.getDirection());
 										yellow.setDirectionRight();
 									}
 									else{
+										yellow.setLastDirection(yellow.getDirection());
 										yellow.setDirectionLeft();
 									}
 									
